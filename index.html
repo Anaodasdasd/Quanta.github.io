@@ -10,7 +10,7 @@
   :root {
     --ui-width: 280px;
     --menu-radius: 4px;
-    --item-height: 40px;
+    --item-height: 36px;
     --main-color: #636363;
     --max-visible-items: 7;
   }
@@ -39,8 +39,8 @@
     border: 1px solid #222;
     box-shadow: 0 0 30px rgba(50,50,50,0.5), 0 0 60px rgba(80,80,80,0.3);
     text-align: center;
-    margin-bottom: 10px;
-    height: 120px;          
+    margin-bottom: 8px;
+    height: 100px;        
     overflow: hidden;         
     animation: slowFadeIn 0.6s ease-out;
   }
@@ -56,12 +56,12 @@
   .nav-box {
     background: rgba(0,0,0,0.95);
     border-radius: var(--menu-radius);
-    padding: 10px 16px;
+    padding: 8px 12px;
     border: 1px solid #222;
     box-shadow: 0 0 15px rgba(50,50,50,0.4);
     text-align: center;
-    margin-bottom: 10px;
-    font-size: 13px;
+    margin-bottom: 8px;
+    font-size: 12px;
     font-weight: 500;
     display: flex;
     justify-content: center;
@@ -130,7 +130,7 @@
 
   .menu-list li {
     background: #0d0d0d;
-    padding: 0 16px;
+    padding: 0 12px;
     height: var(--item-height);
     border-bottom: 1px solid #222;
     cursor: pointer;
@@ -162,26 +162,26 @@
   .menu-list li .left {
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
   }
 
   .menu-list li span {
     font-weight: 500;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 13px;
     letter-spacing: 0.3px;
   }
 
   .footer-box {
     background: rgba(0,0,0,0.95);
     border-radius: var(--menu-radius);
-    padding: 12px 16px;
-    font-size: 12px;
+    padding: 8px 12px;
+    font-size: 11px;
     display: flex;
     justify-content: space-between;
     border: 1px solid #222;
     text-shadow: 0 0 6px #555;
-    margin-top: 10px;
+    margin-top: 8px;
     box-shadow: 0 0 30px rgba(50,50,50,0.5), 0 0 60px rgba(80,80,80,0.3);
     width: 100%;                 
     box-sizing: border-box;
@@ -202,8 +202,8 @@
   .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 38px;
-    height: 20px;
+    width: 34px;
+    height: 18px;
   }
 
   .toggle-switch input {
@@ -228,8 +228,8 @@
   .slider:before {
     position: absolute;
     content: "";
-    height: 14px;
-    width: 14px;
+    height: 12px;
+    width: 12px;
     left: 3px;
     bottom: 2px;
     background-color: #999;
@@ -243,14 +243,14 @@
   }
 
   input:checked + .slider:before {
-    transform: translateX(18px);
+    transform: translateX(16px);
     background-color: #fff;
   }
 
   .menu-icon {
-    width: 14px;
+    width: 12px;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     color: var(--main-color);
   }
   
@@ -417,6 +417,33 @@
   .dev-button:hover {
     background: #7a7a7a;
   }
+
+  .banner-input {
+    display: flex;
+    margin-bottom: 10px;
+  }
+
+  .banner-input input {
+    flex: 1;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px 0 0 3px;
+    color: white;
+    padding: 5px 8px;
+    font-family: inherit;
+    font-size: 12px;
+  }
+
+  .banner-input button {
+    background: var(--main-color);
+    border: none;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 0 3px 3px 0;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+  }
 </style>
 </head>
 <body>
@@ -506,11 +533,37 @@
           <li data-action="debug-info"><span class="left"><span>Debug Info</span></span></li>
           <li data-action="reload-scripts"><span class="left"><span>Reload Scripts</span></span></li>
           <li data-action="test-connection"><span class="left"><span>Test Connection</span></span></li>
-          <li data-action="ui-position"><span class="left"><span>UI Position</span></span><span>›</span></li>
+          <li data-action="show-configs"><span class="left"><span>Configs</span></span><span>›</span></li>
+          <li data-action="show-banners"><span class="left"><span>Banners</span></span><span>›</span></li>
+          <li data-action="show-ui-position"><span class="left"><span>UI Position</span></span><span>›</span></li>
         </ul>
       </div>
 
-      <!-- Nové menu pre UI pozíciu -->
+      <!-- Configs menu -->
+      <div id="configsMenu" class="menu-content hidden">
+        <ul class="menu-list">
+          <li data-action="save-config"><span class="left"><span>Save Config</span></span></li>
+          <li data-action="load-config"><span class="left"><span>Load Config</span></span></li>
+          <li data-action="reset-config"><span class="left"><span>Reset Config</span></span></li>
+        </ul>
+      </div>
+
+      <!-- Banners menu -->
+      <div id="bannersMenu" class="menu-content hidden">
+        <ul class="menu-list">
+          <li data-action="default-banner"><span class="left"><span>Default Banner</span></span></li>
+        </ul>
+        
+        <div class="developer-controls">
+          <div class="banner-input">
+            <input type="text" id="bannerUrl" placeholder="Enter banner URL">
+            <button id="applyBanner">Apply</button>
+          </div>
+          <button class="dev-button" id="saveBanner">Save as Default</button>
+        </div>
+      </div>
+
+      <!-- UI Position menu -->
       <div id="uiPositionMenu" class="menu-content hidden">
         <ul class="menu-list">
           <li data-action="reset-ui-position"><span class="left"><span>Reset Position</span></span></li>
@@ -555,23 +608,6 @@
 </div>
 
 <script>
-// Funkcia pre komunikáciu s Lua
-function MachoSendLuaMessage(data) {
-  // Táto funkcia bude volaná z Lua prostredia
-  try {
-    // Pre FiveM
-    if (typeof exports !== 'undefined' && typeof exports !== null) {
-      exports('MachoSendLuaMessage', data);
-    } 
-    // Pre prehliadačové testovanie
-    else {
-      console.log("Lua message:", data);
-    }
-  } catch (e) {
-    console.error("Error sending message to Lua:", e);
-  }
-}
-
 document.addEventListener("DOMContentLoaded", function() {
   const DEFAULT_BANNER_URL = 'https://cdn.discordapp.com/attachments/1337202405913399329/1410763134037397586/3C673ED6-75E1-4798-BD1D-E79B33D14ACE.png?ex=68b2dbcd&is=68b18a4d&hm=be1ebbb5fdba10841b7fc033d540b2931533e7339107ae8297e6770904bc8e27&';
 
@@ -585,6 +621,8 @@ document.addEventListener("DOMContentLoaded", function() {
     misc: document.getElementById("miscMenu"),
     settings: document.getElementById("settingsMenu"),
     developer: document.getElementById("developerMenu"),
+    configs: document.getElementById("configsMenu"),
+    banners: document.getElementById("bannersMenu"),
     uiPosition: document.getElementById("uiPositionMenu")
   };
 
@@ -598,6 +636,8 @@ document.addEventListener("DOMContentLoaded", function() {
     misc: "Miscellaneous",
     settings: "Settings",
     developer: "Developer",
+    configs: "Configs",
+    banners: "Banners",
     uiPosition: "UI Position"
   };
 
@@ -620,12 +660,20 @@ document.addEventListener("DOMContentLoaded", function() {
   const swipeBar = document.getElementById('swipeBar');
   const swipeHandle = document.getElementById('swipeHandle');
   const applyPositionBtn = document.getElementById('applyPosition');
+  
+  // Banner elements
+  const bannerUrlInput = document.getElementById('bannerUrl');
+  const applyBannerBtn = document.getElementById('applyBanner');
+  const saveBannerBtn = document.getElementById('saveBanner');
 
   // Načítanie uložených pozícií
   let uiPosition = {
     x: localStorage.getItem('uiPosX') ? parseInt(localStorage.getItem('uiPosX')) : 20,
     y: localStorage.getItem('uiPosY') ? parseInt(localStorage.getItem('uiPosY')) : 50
   };
+  
+  // Načítanie uloženého banneru
+  let currentBannerUrl = localStorage.getItem('bannerUrl') || DEFAULT_BANNER_URL;
   
   // Aktualizácia UI pozície
   function updateUIPosition() {
@@ -647,7 +695,7 @@ document.addEventListener("DOMContentLoaded", function() {
   
   // Aktualizácia pozície swipe handle
   function updateSwipeHandle() {
-    const maxPosition = 250; // Maximálna hodnota pre X
+    const maxPosition = 250;
     const percentage = (uiPosition.x / maxPosition) * 100;
     const handlePosition = Math.min(Math.max(percentage, 0), 100);
     
@@ -712,13 +760,30 @@ document.addEventListener("DOMContentLoaded", function() {
   applyPositionBtn.addEventListener('click', function() {
     updateUIPosition();
   });
+  
+  // Aplikovanie banneru
+  applyBannerBtn.addEventListener('click', function() {
+    const url = bannerUrlInput.value.trim();
+    if (url) {
+      setHeaderBanner(url);
+    }
+  });
+  
+  // Uloženie banneru
+  saveBannerBtn.addEventListener('click', function() {
+    const url = bannerUrlInput.value.trim();
+    if (url) {
+      localStorage.setItem('bannerUrl', url);
+      currentBannerUrl = url;
+    }
+  });
 
   function getCurrentList() {
     return currentMenu.querySelector('.menu-list');
   }
 
   function setHeaderBanner(url) {
-    headerBannerImg.src = url || DEFAULT_BANNER_URL;
+    headerBannerImg.src = url;
   }
 
   function updateNavigation() {
@@ -874,22 +939,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 300);
   }
 
-  // Pridané: Event listenery pre checkboxy
-  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', function() {
-      const listItem = this.closest('li');
-      const action = listItem.getAttribute('data-action');
-      
-      // Odoslanie správy do Lua
-      MachoSendLuaMessage(JSON.stringify({ 
-        event: 'toggle', 
-        action: action, 
-        state: this.checked,
-        elementId: this.id 
-      }));
-    });
-  });
-
   window.addEventListener('message', function(event) {
     const data = event.data || {};
     const menuItems = currentMenu.querySelectorAll('.menu-list li');
@@ -911,26 +960,22 @@ document.addEventListener("DOMContentLoaded", function() {
         const checkbox = selectedItem.querySelector("input[type='checkbox']");
         if (checkbox) {
           checkbox.checked = !checkbox.checked;
-          
-          // Odoslanie správy do Lua pri zmene checkboxu
-          MachoSendLuaMessage(JSON.stringify({ 
-            event: 'toggle', 
-            action: action, 
-            state: checkbox.checked,
-            elementId: checkbox.id 
-          }));
+          window.MachoSendLuaMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
         }
-      } else if (action === 'ui-position') {
+      } else if (action === 'show-ui-position') {
         showMenu('uiPosition');
+      } else if (action === 'show-configs') {
+        showMenu('configs');
+      } else if (action === 'show-banners') {
+        showMenu('banners');
       } else if (action === 'reset-ui-position') {
         uiPosition = { x: 20, y: 50 };
         updateUIPosition();
+      } else if (action === 'default-banner') {
+        setHeaderBanner(DEFAULT_BANNER_URL);
+        bannerUrlInput.value = DEFAULT_BANNER_URL;
       } else {
-        // Odoslanie správy pre iné akcie
-        MachoSendLuaMessage(JSON.stringify({ 
-          event: 'menuAction', 
-          action: action 
-        }));
+        window.MachoSendLuaMessage(JSON.stringify({ event: 'menuAction', action: action }));
       }
     } else if (data.action === 'back') {
       handleBack();
@@ -942,7 +987,8 @@ document.addEventListener("DOMContentLoaded", function() {
   // Inicializácia
   updateSelection();
   updateNavigation();
-  setHeaderBanner(DEFAULT_BANNER_URL);
+  setHeaderBanner(currentBannerUrl);
+  bannerUrlInput.value = currentBannerUrl;
   resizeMenu();
   updateUIPosition();
   initSwipeBar();
