@@ -107,21 +107,40 @@
     margin: 0;
     padding: 0;
     width: 100%;
+  }
+
+  /* Hlavné menu - bez scrollbaru */
+  #mainMenu .menu-list {
+    max-height: calc(var(--item-height) * var(--max-visible-items));
+    overflow-y: hidden;
+  }
+
+  /* Ostatné menu - so scrollbarom vľavo */
+  .menu-content:not(#mainMenu) .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--main-color) #222;
+    direction: rtl; /* Posunie scrollbar doľava */
+    padding-left: 4px; /* Priestor pre scrollbar */
   }
 
-  .menu-list::-webkit-scrollbar {
+  .menu-content:not(#mainMenu) .menu-list li {
+    direction: ltr; /* Vrátime obsah späť do normálneho smeru */
+  }
+
+  /* Webkit scrollbar pre ostatné menu */
+  .menu-content:not(#mainMenu) .menu-list::-webkit-scrollbar {
     width: 4px;
+    left: 0;
   }
 
-  .menu-list::-webkit-scrollbar-track {
+  .menu-content:not(#mainMenu) .menu-list::-webkit-scrollbar-track {
     background: #222;
+    margin: 2px 0;
   }
 
-  .menu-list::-webkit-scrollbar-thumb {
+  .menu-content:not(#mainMenu) .menu-list::-webkit-scrollbar-thumb {
     background-color: var(--main-color);
     border-radius: 2px;
   }
@@ -468,13 +487,7 @@ document.addEventListener("DOMContentLoaded", function() {
       if (!menuItems || menuItems.length === 0) {
         globalFooterCount.textContent = '0/0';
       } else {
-        // Pre hlavné menu zobrazujeme celkový počet položiek
-        if (currentMenu.id === 'mainMenu') {
-          globalFooterCount.textContent = `${selectedIndex + 1}/${menuItems.length}`;
-        } else {
-          // Pre ostatné menu zobrazujeme iba aktuálnu pozíciu
-          globalFooterCount.textContent = `${selectedIndex + 1}/${menuItems.length}`;
-        }
+        globalFooterCount.textContent = `${selectedIndex + 1}/${menuItems.length}`;
       }
     }
   }
