@@ -328,6 +328,95 @@
     font-weight: 600;
     animation: slowFadeIn 0.6s ease-out 0.4s both;
   }
+
+  /* Developer section styles */
+  .developer-controls {
+    padding: 10px;
+    background: rgba(20, 20, 20, 0.8);
+    border-radius: var(--menu-radius);
+    margin-top: 10px;
+    border: 1px solid #333;
+  }
+
+  .coord-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+
+  .coord-input label {
+    width: 20px;
+    margin-right: 8px;
+    color: var(--main-color);
+    font-weight: 600;
+  }
+
+  .coord-input input {
+    flex: 1;
+    background: #111;
+    border: 1px solid #333;
+    border-radius: 3px;
+    color: white;
+    padding: 5px 8px;
+    font-family: inherit;
+    font-size: 12px;
+  }
+
+  .swipe-container {
+    margin-top: 10px;
+  }
+
+  .swipe-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 12px;
+    color: #ccc;
+  }
+
+  .swipe-bar {
+    height: 20px;
+    background: #222;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .swipe-handle {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: var(--main-color);
+    border-radius: 50%;
+    top: -2px;
+    left: 0;
+    cursor: grab;
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    transition: background 0.2s;
+  }
+
+  .swipe-handle:active {
+    cursor: grabbing;
+    background: #7a7a7a;
+  }
+
+  .dev-button {
+    background: var(--main-color);
+    border: none;
+    color: white;
+    padding: 8px;
+    border-radius: 3px;
+    margin-top: 10px;
+    width: 100%;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+
+  .dev-button:hover {
+    background: #7a7a7a;
+  }
 </style>
 </head>
 <body>
@@ -417,7 +506,39 @@
           <li data-action="debug-info"><span class="left"><span>Debug Info</span></span></li>
           <li data-action="reload-scripts"><span class="left"><span>Reload Scripts</span></span></li>
           <li data-action="test-connection"><span class="left"><span>Test Connection</span></span></li>
+          <li data-action="ui-position"><span class="left"><span>UI Position</span></span><span>›</span></li>
         </ul>
+      </div>
+
+      <!-- Nové menu pre UI pozíciu -->
+      <div id="uiPositionMenu" class="menu-content hidden">
+        <ul class="menu-list">
+          <li data-action="reset-ui-position"><span class="left"><span>Reset Position</span></span></li>
+        </ul>
+        
+        <div class="developer-controls">
+          <div class="coord-input">
+            <label>X:</label>
+            <input type="number" id="posX" value="20">
+          </div>
+          <div class="coord-input">
+            <label>Y:</label>
+            <input type="number" id="posY" value="50">
+          </div>
+          
+          <div class="swipe-container">
+            <div class="swipe-label">
+              <span>Left</span>
+              <span>UI Position</span>
+              <span>Right</span>
+            </div>
+            <div class="swipe-bar" id="swipeBar">
+              <div class="swipe-handle" id="swipeHandle"></div>
+            </div>
+          </div>
+          
+          <button class="dev-button" id="applyPosition">Apply Position</button>
+        </div>
       </div>
     </div>
     
@@ -446,7 +567,8 @@ document.addEventListener("DOMContentLoaded", function() {
     teleport: document.getElementById("teleportMenu"),
     misc: document.getElementById("miscMenu"),
     settings: document.getElementById("settingsMenu"),
-    developer: document.getElementById("developerMenu")
+    developer: document.getElementById("developerMenu"),
+    uiPosition: document.getElementById("uiPositionMenu")
   };
 
   const menuNames = {
@@ -458,7 +580,8 @@ document.addEventListener("DOMContentLoaded", function() {
     teleport: "Teleport",
     misc: "Miscellaneous",
     settings: "Settings",
-    developer: "Developer"
+    developer: "Developer",
+    uiPosition: "UI Position"
   };
 
   let currentMenu = menus.mainMenu;
@@ -472,6 +595,106 @@ document.addEventListener("DOMContentLoaded", function() {
   const navCurrent = document.getElementById('navCurrent');
   const externalScrollbar = document.getElementById('externalScrollbar');
   const scrollbarThumb = externalScrollbar.querySelector('.scrollbar-thumb');
+  const uiElement = document.querySelector('.ui');
+  
+  // UI Position elements
+  const posXInput = document.getElementById('posX');
+  const posYInput = document.getElementById('posY');
+  const swipeBar = document.getElementById('swipeBar');
+  const swipeHandle = document.getElementById('swipeHandle');
+  const applyPositionBtn = document.getElementById('applyPosition');
+
+  // Načítanie uložených pozícií
+  let uiPosition = {
+    x: localStorage.getItem('uiPosX') ? parseInt(localStorage.getItem('uiPosX')) : 20,
+    y: localStorage.getItem('uiPosY') ? parseInt(localStorage.getItem('uiPosY')) : 50
+  };
+  
+  // Aktualizácia UI pozície
+  function updateUIPosition() {
+    uiElement.style.left = uiPosition.x + 'px';
+    uiElement.style.top = uiPosition.y + '%';
+    uiElement.style.transform = 'translateY(-50%)';
+    
+    // Uloženie do localStorage
+    localStorage.setItem('uiPosX', uiPosition.x);
+    localStorage.setItem('uiPosY', uiPosition.y);
+    
+    // Aktualizácia vstupov
+    posXInput.value = uiPosition.x;
+    posYInput.value = uiPosition.y;
+    
+    // Aktualizácia swipe handle
+    updateSwipeHandle();
+  }
+  
+  // Aktualizácia pozície swipe handle
+  function updateSwipeHandle() {
+    const maxPosition = 250; // Maximálna hodnota pre X
+    const percentage = (uiPosition.x / maxPosition) * 100;
+    const handlePosition = Math.min(Math.max(percentage, 0), 100);
+    
+    swipeHandle.style.left = `calc(${handlePosition}% - ${handlePosition * 0.24}px)`;
+  }
+  
+  // Inicializácia swipe baru
+  function initSwipeBar() {
+    let isDragging = false;
+    
+    swipeHandle.addEventListener('mousedown', function(e) {
+      isDragging = true;
+      e.preventDefault();
+    });
+    
+    document.addEventListener('mousemove', function(e) {
+      if (!isDragging) return;
+      
+      const barRect = swipeBar.getBoundingClientRect();
+      let position = ((e.clientX - barRect.left) / barRect.width) * 100;
+      position = Math.min(Math.max(position, 0), 100);
+      
+      swipeHandle.style.left = `calc(${position}% - ${position * 0.24}px)`;
+      
+      // Aktualizácia X pozície
+      uiPosition.x = Math.round((position / 100) * 250);
+      posXInput.value = uiPosition.x;
+    });
+    
+    document.addEventListener('mouseup', function() {
+      isDragging = false;
+    });
+    
+    swipeBar.addEventListener('click', function(e) {
+      const barRect = swipeBar.getBoundingClientRect();
+      let position = ((e.clientX - barRect.left) / barRect.width) * 100;
+      position = Math.min(Math.max(position, 0), 100);
+      
+      swipeHandle.style.left = `calc(${position}% - ${position * 0.24}px)`;
+      
+      // Aktualizácia X pozície
+      uiPosition.x = Math.round((position / 100) * 250);
+      posXInput.value = uiPosition.x;
+    });
+    
+    // Aktualizácia handle pri načítaní
+    updateSwipeHandle();
+  }
+  
+  // Spracovanie zmien v inputoch
+  posXInput.addEventListener('change', function() {
+    uiPosition.x = parseInt(this.value) || 20;
+    updateUIPosition();
+  });
+  
+  posYInput.addEventListener('change', function() {
+    uiPosition.y = parseInt(this.value) || 50;
+    updateUIPosition();
+  });
+  
+  // Aplikovanie pozície
+  applyPositionBtn.addEventListener('click', function() {
+    updateUIPosition();
+  });
 
   function getCurrentList() {
     return currentMenu.querySelector('.menu-list');
@@ -657,6 +880,11 @@ document.addEventListener("DOMContentLoaded", function() {
           checkbox.checked = !checkbox.checked;
           window.MachoSendLuaMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
         }
+      } else if (action === 'ui-position') {
+        showMenu('uiPosition');
+      } else if (action === 'reset-ui-position') {
+        uiPosition = { x: 20, y: 50 };
+        updateUIPosition();
       } else {
         window.MachoSendLuaMessage(JSON.stringify({ event: 'menuAction', action: action }));
       }
@@ -672,10 +900,11 @@ document.addEventListener("DOMContentLoaded", function() {
   updateNavigation();
   setHeaderBanner(DEFAULT_BANNER_URL);
   resizeMenu();
+  updateUIPosition();
+  initSwipeBar();
   window.addEventListener('resize', resizeMenu);
 });
 </script>
 
 </body>
 </html>
-
