@@ -10,7 +10,7 @@
   :root {
     --ui-width: 280px;
     --menu-radius: 4px;
-    --item-height: 36px; /* Zmenšená výška položky */
+    --item-height: 40px;
     --main-color: #636363;
     --max-visible-items: 7;
   }
@@ -39,8 +39,8 @@
     border: 1px solid #222;
     box-shadow: 0 0 30px rgba(50,50,50,0.5), 0 0 60px rgba(80,80,80,0.3);
     text-align: center;
-    margin-bottom: 8px; /* Zmenšená medzera */
-    height: 100px; /* Zmenšená výška */        
+    margin-bottom: 10px;
+    height: 120px;          
     overflow: hidden;         
     animation: slowFadeIn 0.6s ease-out;
   }
@@ -56,12 +56,12 @@
   .nav-box {
     background: rgba(0,0,0,0.95);
     border-radius: var(--menu-radius);
-    padding: 8px 12px; /* Zmenšený padding */
+    padding: 10px 16px;
     border: 1px solid #222;
     box-shadow: 0 0 15px rgba(50,50,50,0.4);
     text-align: center;
-    margin-bottom: 8px; /* Zmenšená medzera */
-    font-size: 12px; /* Zmenšené písmo */
+    margin-bottom: 10px;
+    font-size: 13px;
     font-weight: 500;
     display: flex;
     justify-content: center;
@@ -130,7 +130,7 @@
 
   .menu-list li {
     background: #0d0d0d;
-    padding: 0 12px; /* Zmenšený padding */
+    padding: 0 16px;
     height: var(--item-height);
     border-bottom: 1px solid #222;
     cursor: pointer;
@@ -162,26 +162,26 @@
   .menu-list li .left {
     display: inline-flex;
     align-items: center;
-    gap: 6px; /* Zmenšený gap */
+    gap: 8px;
   }
 
   .menu-list li span {
     font-weight: 500;
     color: #ffffff;
-    font-size: 13px; /* Zmenšená veľkosť písma */
+    font-size: 14px;
     letter-spacing: 0.3px;
   }
 
   .footer-box {
     background: rgba(0,0,0,0.95);
     border-radius: var(--menu-radius);
-    padding: 8px 12px; /* Zmenšený padding */
-    font-size: 11px; /* Zmenšené písmo */
+    padding: 12px 16px;
+    font-size: 12px;
     display: flex;
     justify-content: space-between;
     border: 1px solid #222;
     text-shadow: 0 0 6px #555;
-    margin-top: 8px; /* Zmenšená medzera */
+    margin-top: 10px;
     box-shadow: 0 0 30px rgba(50,50,50,0.5), 0 0 60px rgba(80,80,80,0.3);
     width: 100%;                 
     box-sizing: border-box;
@@ -202,8 +202,8 @@
   .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 34px; /* Zmenšená šírka */
-    height: 18px; /* Zmenšená výška */
+    width: 38px;
+    height: 20px;
   }
 
   .toggle-switch input {
@@ -228,8 +228,8 @@
   .slider:before {
     position: absolute;
     content: "";
-    height: 12px; /* Zmenšená veľkosť */
-    width: 12px; /* Zmenšená veľkosť */
+    height: 14px;
+    width: 14px;
     left: 3px;
     bottom: 2px;
     background-color: #999;
@@ -243,14 +243,14 @@
   }
 
   input:checked + .slider:before {
-    transform: translateX(16px); /* Upravený posun */
+    transform: translateX(18px);
     background-color: #fff;
   }
 
   .menu-icon {
-    width: 12px; /* Zmenšená šírka */
+    width: 14px;
     text-align: center;
-    font-size: 11px; /* Zmenšená veľkosť písma */
+    font-size: 12px;
     color: var(--main-color);
   }
   
@@ -555,6 +555,23 @@
 </div>
 
 <script>
+// Funkcia pre komunikáciu s Lua
+function MachoSendLuaMessage(data) {
+  // Táto funkcia bude volaná z Lua prostredia
+  try {
+    // Pre FiveM
+    if (typeof exports !== 'undefined' && typeof exports !== null) {
+      exports('MachoSendLuaMessage', data);
+    } 
+    // Pre prehliadačové testovanie
+    else {
+      console.log("Lua message:", data);
+    }
+  } catch (e) {
+    console.error("Error sending message to Lua:", e);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function() {
   const DEFAULT_BANNER_URL = 'https://cdn.discordapp.com/attachments/1337202405913399329/1410763134037397586/3C673ED6-75E1-4798-BD1D-E79B33D14ACE.png?ex=68b2dbcd&is=68b18a4d&hm=be1ebbb5fdba10841b7fc033d540b2931533e7339107ae8297e6770904bc8e27&';
 
@@ -857,6 +874,22 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 300);
   }
 
+  // Pridané: Event listenery pre checkboxy
+  document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+    checkbox.addEventListener('change', function() {
+      const listItem = this.closest('li');
+      const action = listItem.getAttribute('data-action');
+      
+      // Odoslanie správy do Lua
+      MachoSendLuaMessage(JSON.stringify({ 
+        event: 'toggle', 
+        action: action, 
+        state: this.checked,
+        elementId: this.id 
+      }));
+    });
+  });
+
   window.addEventListener('message', function(event) {
     const data = event.data || {};
     const menuItems = currentMenu.querySelectorAll('.menu-list li');
@@ -878,7 +911,14 @@ document.addEventListener("DOMContentLoaded", function() {
         const checkbox = selectedItem.querySelector("input[type='checkbox']");
         if (checkbox) {
           checkbox.checked = !checkbox.checked;
-          window.MachoSendLuaMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
+          
+          // Odoslanie správy do Lua pri zmene checkboxu
+          MachoSendLuaMessage(JSON.stringify({ 
+            event: 'toggle', 
+            action: action, 
+            state: checkbox.checked,
+            elementId: checkbox.id 
+          }));
         }
       } else if (action === 'ui-position') {
         showMenu('uiPosition');
@@ -886,7 +926,11 @@ document.addEventListener("DOMContentLoaded", function() {
         uiPosition = { x: 20, y: 50 };
         updateUIPosition();
       } else {
-        window.MachoSendLuaMessage(JSON.stringify({ event: 'menuAction', action: action }));
+        // Odoslanie správy pre iné akcie
+        MachoSendLuaMessage(JSON.stringify({ 
+          event: 'menuAction', 
+          action: action 
+        }));
       }
     } else if (data.action === 'back') {
       handleBack();
