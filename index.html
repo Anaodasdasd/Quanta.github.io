@@ -110,21 +110,21 @@
     width: 100%;
   }
 
-  /* Hlavné menu - bez scrollbaru */
+  /* Hlavné menu - so scrollbarom */
   #mainMenu .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
     overflow-y: hidden;
   }
 
-  /* Ostatné menu - so scrollbarom v externom boxe */
-  .menu-content:not(#mainMenu) .menu-list {
+  /* Ostatné menu - so scrollbarom */
+  .menu-content .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
     overflow-y: hidden;
     direction: rtl;
     padding-left: 4px;
   }
 
-  .menu-content:not(#mainMenu) .menu-list li {
+  .menu-content .menu-list li {
     direction: ltr;
   }
 
@@ -285,14 +285,13 @@
     }
   }
 
-  /* Externý scrollbar */
+  /* Externý scrollbar - hrubší */
   .scrollbar-container {
     position: absolute;
-    right: -12px;
+    right: -14px;
     top: 0;
     height: 100%;
-    width: 6px;
-    display: none;
+    width: 10px;
   }
 
   .scrollbar-track {
@@ -300,18 +299,34 @@
     right: 0;
     top: 0;
     height: 100%;
-    width: 4px;
+    width: 8px;
     background: #222;
-    border-radius: 2px;
+    border-radius: 4px;
   }
 
   .scrollbar-thumb {
     position: absolute;
     right: 0;
-    width: 4px;
+    width: 8px;
     background-color: var(--main-color);
-    border-radius: 2px;
+    border-radius: 4px;
     transition: height 0.2s, top 0.2s;
+  }
+
+  /* Nový box s nickom */
+  .nick-box {
+    position: absolute;
+    right: 20px;
+    bottom: 20px;
+    background: rgba(0,0,0,0.95);
+    border-radius: var(--menu-radius);
+    padding: 8px 12px;
+    font-size: 12px;
+    border: 1px solid #222;
+    box-shadow: 0 0 15px rgba(50,50,50,0.4);
+    color: var(--main-color);
+    font-weight: 600;
+    animation: slowFadeIn 0.6s ease-out 0.4s both;
   }
 </style>
 </head>
@@ -415,9 +430,11 @@
 
   <div class="footer-box">
     <span>Quanta - Beta</span>
-    <span id="globalFooterCount">1/8</span>
   </div>
 </div>
+
+<!-- Nový box s nickom -->
+<div class="nick-box">QuantaAI</div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
@@ -452,7 +469,6 @@ document.addEventListener("DOMContentLoaded", function() {
   let history = [];
   let isAnimating = false;
 
-  const globalFooterCount = document.getElementById("globalFooterCount");
   const headerBannerImg = document.getElementById('headerBannerImg');
   const menuBox = document.getElementById('menuBox');
   const navPath = document.getElementById('navPath');
@@ -501,17 +517,6 @@ document.addEventListener("DOMContentLoaded", function() {
     navCurrent.textContent = ` › ${currentName}`;
   }
 
-  function updateFooterCount() {
-    if (globalFooterCount) {
-      const menuItems = currentMenu.querySelectorAll('.menu-list li');
-      if (!menuItems || menuItems.length === 0) {
-        globalFooterCount.textContent = '0/0';
-      } else {
-        globalFooterCount.textContent = `${selectedIndex + 1}/${menuItems.length}`;
-      }
-    }
-  }
-
   function updateSelection() {
     const menuItems = currentMenu.querySelectorAll('.menu-list li');
     document.querySelectorAll('.menu-list li.selected').forEach(el => el.classList.remove('selected'));
@@ -519,21 +524,11 @@ document.addEventListener("DOMContentLoaded", function() {
       menuItems[selectedIndex].classList.add('selected');
       menuItems[selectedIndex].scrollIntoView({ block: 'nearest' });
     }
-    updateFooterCount();
     updateExternalScrollbar();
   }
 
   function updateExternalScrollbar() {
     const menuItems = currentMenu.querySelectorAll('.menu-list li');
-    
-    // Skry scrollbar pre hlavné menu
-    if (currentMenu.id === 'mainMenu') {
-      externalScrollbar.style.display = 'none';
-      return;
-    }
-    
-    // Zobraz scrollbar pre ostatné menu
-    externalScrollbar.style.display = 'block';
     
     if (menuItems.length === 0) return;
     
@@ -546,7 +541,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const thumbHeight = Math.max(20, (visibleHeight / totalHeight) * visibleHeight);
     const maxScroll = totalHeight - visibleHeight;
     const scrollPosition = Math.min(selectedIndex * itemHeight, maxScroll);
-    const thumbPosition = (scrollPosition / maxScroll) * (visibleHeight - thumbHeight);
+    const thumbPosition = maxScroll > 0 ? (scrollPosition / maxScroll) * (visibleHeight - thumbHeight) : 0;
     
     // Aktualizuj thumb
     scrollbarThumb.style.height = thumbHeight + 'px';
