@@ -82,6 +82,7 @@
     display: flex;
     gap: 0;
     align-items: stretch;
+    position: relative;
   }
 
   .menu {
@@ -115,34 +116,16 @@
     overflow-y: hidden;
   }
 
-  /* Ostatné menu - so scrollbarom vľavo */
+  /* Ostatné menu - so scrollbarom v externom boxe */
   .menu-content:not(#mainMenu) .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--main-color) #222;
-    direction: rtl; /* Posunie scrollbar doľava */
-    padding-left: 4px; /* Priestor pre scrollbar */
+    overflow-y: hidden;
+    direction: rtl;
+    padding-left: 4px;
   }
 
   .menu-content:not(#mainMenu) .menu-list li {
-    direction: ltr; /* Vrátime obsah späť do normálneho smeru */
-  }
-
-  /* Webkit scrollbar pre ostatné menu */
-  .menu-content:not(#mainMenu) .menu-list::-webkit-scrollbar {
-    width: 4px;
-    left: 0;
-  }
-
-  .menu-content:not(#mainMenu) .menu-list::-webkit-scrollbar-track {
-    background: #222;
-    margin: 2px 0;
-  }
-
-  .menu-content:not(#mainMenu) .menu-list::-webkit-scrollbar-thumb {
-    background-color: var(--main-color);
-    border-radius: 2px;
+    direction: ltr;
   }
 
   .menu-list li {
@@ -301,6 +284,35 @@
       opacity: 0;
     }
   }
+
+  /* Externý scrollbar */
+  .scrollbar-container {
+    position: absolute;
+    right: -12px;
+    top: 0;
+    height: 100%;
+    width: 6px;
+    display: none;
+  }
+
+  .scrollbar-track {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: #222;
+    border-radius: 2px;
+  }
+
+  .scrollbar-thumb {
+    position: absolute;
+    right: 0;
+    width: 4px;
+    background-color: var(--main-color);
+    border-radius: 2px;
+    transition: height 0.2s, top 0.2s;
+  }
 </style>
 </head>
 <body>
@@ -393,6 +405,12 @@
         </ul>
       </div>
     </div>
+    
+    <!-- Externý scrollbar container -->
+    <div class="scrollbar-container" id="externalScrollbar">
+      <div class="scrollbar-track"></div>
+      <div class="scrollbar-thumb"></div>
+    </div>
   </div>
 
   <div class="footer-box">
@@ -439,6 +457,8 @@ document.addEventListener("DOMContentLoaded", function() {
   const menuBox = document.getElementById('menuBox');
   const navPath = document.getElementById('navPath');
   const navCurrent = document.getElementById('navCurrent');
+  const externalScrollbar = document.getElementById('externalScrollbar');
+  const scrollbarThumb = externalScrollbar.querySelector('.scrollbar-thumb');
 
   function getCurrentList() {
     return currentMenu.querySelector('.menu-list');
@@ -500,6 +520,37 @@ document.addEventListener("DOMContentLoaded", function() {
       menuItems[selectedIndex].scrollIntoView({ block: 'nearest' });
     }
     updateFooterCount();
+    updateExternalScrollbar();
+  }
+
+  function updateExternalScrollbar() {
+    const menuItems = currentMenu.querySelectorAll('.menu-list li');
+    
+    // Skry scrollbar pre hlavné menu
+    if (currentMenu.id === 'mainMenu') {
+      externalScrollbar.style.display = 'none';
+      return;
+    }
+    
+    // Zobraz scrollbar pre ostatné menu
+    externalScrollbar.style.display = 'block';
+    
+    if (menuItems.length === 0) return;
+    
+    const itemHeight = menuItems[0].offsetHeight;
+    const visibleItems = Math.min(menuItems.length, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-visible-items')));
+    const totalHeight = menuItems.length * itemHeight;
+    const visibleHeight = visibleItems * itemHeight;
+    
+    // Vypočítaj pozíciu a veľkosť thumbu
+    const thumbHeight = Math.max(20, (visibleHeight / totalHeight) * visibleHeight);
+    const maxScroll = totalHeight - visibleHeight;
+    const scrollPosition = Math.min(selectedIndex * itemHeight, maxScroll);
+    const thumbPosition = (scrollPosition / maxScroll) * (visibleHeight - thumbHeight);
+    
+    // Aktualizuj thumb
+    scrollbarThumb.style.height = thumbHeight + 'px';
+    scrollbarThumb.style.top = thumbPosition + 'px';
   }
 
   function resizeMenu() {
@@ -526,6 +577,8 @@ document.addEventListener("DOMContentLoaded", function() {
       const targetH = Math.round(itemHeight * items.length + pt + pb);
       menuBox.style.height = targetH + 'px';
     }
+    
+    updateExternalScrollbar();
   }
 
   function showMenu(menuId) {
@@ -633,4 +686,3 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </body>
 </html>
-
