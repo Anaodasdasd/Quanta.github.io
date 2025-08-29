@@ -11,7 +11,8 @@
     --ui-width: 280px;
     --menu-radius: 4px;
     --item-height: 40px;
-    --main-color: #636363;
+    --main-color: #5220a3;
+    --max-visible-items: 7;
   }
 
   body {
@@ -106,6 +107,23 @@
     margin: 0;
     padding: 0;
     width: 100%;
+    max-height: calc(var(--item-height) * var(--max-visible-items));
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--main-color) #222;
+  }
+
+  .menu-list::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .menu-list::-webkit-scrollbar-track {
+    background: #222;
+  }
+
+  .menu-list::-webkit-scrollbar-thumb {
+    background-color: var(--main-color);
+    border-radius: 2px;
   }
 
   .menu-list li {
@@ -291,6 +309,7 @@
           <li data-action="show-teleport"><span class="left"><span class="menu-icon"><i class="fas fa-location-dot"></i></span><span>Teleport</span></span><span>›</span></li>
           <li data-action="show-misc"><span class="left"><span class="menu-icon"><i class="fas fa-cubes"></i></span><span>Miscellaneous</span></span><span>›</span></li>
           <li data-action="show-settings"><span class="left"><span class="menu-icon"><i class="fas fa-gear"></i></span><span>Settings</span></span><span>›</span></li>
+          <li data-action="show-developer"><span class="left"><span class="menu-icon"><i class="fas fa-code"></i></span><span>Developer</span></span><span>›</span></li>
         </ul>
       </div>
 
@@ -346,18 +365,26 @@
           <li data-action="toggle-hud"><span class="left"><span>HUD</span></span><label class="toggle-switch"><input type="checkbox" id="hudToggle"><span class="slider"></span></label></li>
         </ul>
       </div>
+
+      <div id="developerMenu" class="menu-content hidden">
+        <ul class="menu-list">
+          <li data-action="debug-info"><span class="left"><span>Debug Info</span></span></li>
+          <li data-action="reload-scripts"><span class="left"><span>Reload Scripts</span></span></li>
+          <li data-action="test-connection"><span class="left"><span>Test Connection</span></span></li>
+        </ul>
+      </div>
     </div>
   </div>
 
   <div class="footer-box">
-    <span>Quanta - Beta</span>
-    <span id="globalFooterCount">1/7</span>
+    <span>Secovce - release</span>
+    <span id="globalFooterCount">1/8</span>
   </div>
 </div>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
-  const DEFAULT_BANNER_URL = 'https://cdn.discordapp.com/attachments/1337202405913399329/1410763134037397586/3C673ED6-75E1-4798-BD1D-E79B33D14ACE.png?ex=68b2dbcd&is=68b18a4d&hm=be1ebbb5fdba10841b7fc033d540b2931533e7339107ae8297e6770904bc8e27&';
+  const DEFAULT_BANNER_URL = 'https://cdn.discordapp.com/attachments/1289592353593491511/1410701342791569488/Snimka_obrazovky_2025-07-16_175136.png?ex=68b1f981&is=68b0a801&hm=5f61a7a0728faca70d1f0ef5fb1702cbf1737da9f56f1582159cd8d809e41009&';
 
   const menus = {
     mainMenu: document.getElementById("mainMenu"),
@@ -367,7 +394,8 @@ document.addEventListener("DOMContentLoaded", function() {
     vehicle: document.getElementById("vehicleMenu"),
     teleport: document.getElementById("teleportMenu"),
     misc: document.getElementById("miscMenu"),
-    settings: document.getElementById("settingsMenu")
+    settings: document.getElementById("settingsMenu"),
+    developer: document.getElementById("developerMenu")
   };
 
   const menuNames = {
@@ -378,7 +406,8 @@ document.addEventListener("DOMContentLoaded", function() {
     vehicle: "Vehicle",
     teleport: "Teleport",
     misc: "Miscellaneous",
-    settings: "Settings"
+    settings: "Settings",
+    developer: "Developer"
   };
 
   let currentMenu = menus.mainMenu;
@@ -433,10 +462,20 @@ document.addEventListener("DOMContentLoaded", function() {
     navCurrent.textContent = ` › ${currentName}`;
   }
 
-  function updateFooterCount(menuItems) {
+  function updateFooterCount() {
     if (globalFooterCount) {
-      if (!menuItems || menuItems.length === 0) globalFooterCount.textContent = '0/0';
-      else globalFooterCount.textContent = `${selectedIndex + 1}/${menuItems.length}`;
+      const menuItems = currentMenu.querySelectorAll('.menu-list li');
+      if (!menuItems || menuItems.length === 0) {
+        globalFooterCount.textContent = '0/0';
+      } else {
+        // Pre hlavné menu zobrazujeme celkový počet položiek
+        if (currentMenu.id === 'mainMenu') {
+          globalFooterCount.textContent = `${selectedIndex + 1}/${menuItems.length}`;
+        } else {
+          // Pre ostatné menu zobrazujeme iba aktuálnu pozíciu
+          globalFooterCount.textContent = `${selectedIndex + 1}/${menuItems.length}`;
+        }
+      }
     }
   }
 
@@ -447,22 +486,33 @@ document.addEventListener("DOMContentLoaded", function() {
       menuItems[selectedIndex].classList.add('selected');
       menuItems[selectedIndex].scrollIntoView({ block: 'nearest' });
     }
-    updateFooterCount(menuItems);
+    updateFooterCount();
   }
 
   function resizeMenu() {
     const list = currentMenu.querySelector('.menu-list');
     if (!list) return;
-    const items = list.querySelectorAll('li');
-    if (items.length === 0) return;
+    
+    // Pre hlavné menu nastavíme fixnú výšku pre 7 položiek
+    if (currentMenu.id === 'mainMenu') {
+      const cs = window.getComputedStyle(menuBox);
+      const pt = parseFloat(cs.paddingTop) || 0;
+      const pb = parseFloat(cs.paddingBottom) || 0;
+      const targetH = Math.round(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--item-height')) * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-visible-items')) + pt + pb);
+      menuBox.style.height = targetH + 'px';
+    } else {
+      // Pre ostatné menu nastavíme výšku podľa počtu položiek
+      const items = list.querySelectorAll('li');
+      if (items.length === 0) return;
 
-    const itemHeight = items[0].getBoundingClientRect().height;
-    const cs = window.getComputedStyle(menuBox);
-    const pt = parseFloat(cs.paddingTop) || 0;
-    const pb = parseFloat(cs.paddingBottom) || 0;
+      const itemHeight = items[0].getBoundingClientRect().height;
+      const cs = window.getComputedStyle(menuBox);
+      const pt = parseFloat(cs.paddingTop) || 0;
+      const pb = parseFloat(cs.paddingBottom) || 0;
 
-    const targetH = Math.round(itemHeight * items.length + pt + pb);
-    menuBox.style.height = targetH + 'px';
+      const targetH = Math.round(itemHeight * items.length + pt + pb);
+      menuBox.style.height = targetH + 'px';
+    }
   }
 
   function showMenu(menuId) {
