@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>cica menu</title>
+<title>Quanta Menu</title>
 <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
@@ -338,21 +338,21 @@
           <li data-action="toggle-nightvision"><span class="left"><span>Nightvision</span></span><label class="toggle-switch"><input type="checkbox" id="nightvisionToggle"><span class="slider"></span></label></li>
           <li data-action="toggle-thermalvision"><span class="left"><span>Thermal Vision</span></span><label class="toggle-switch"><input type="checkbox" id="thermalvisionToggle"><span class="slider"></span></label></li>
         </ul>
-      </div>
-
-      <div id="settingsMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="toggle-crosshair"><span class="left"><span>Crosshair</span></span><label class="toggle-switch"><input type="checkbox" id="crosshairToggle"><span class="slider"></span></label></li>
-          <li data-action="toggle-hud"><span class="left"><span>HUD</span></span><label class="toggle-switch"><input type="checkbox" id="hudToggle"><span class="slider"></span></label></li>
-        </ul>
-      </div>
-    </div>
   </div>
 
-  <div class="footer-box">
-    <span>Quanta - Beta</span>
-    <span id="globalFooterCount">1/7</span>
+  <div id="settingsMenu" class="menu-content hidden">
+    <ul class="menu-list">
+      <li data-action="toggle-crosshair"><span class="left"><span>Crosshair</span></span><label class="toggle-switch"><input type="checkbox" id="crosshairToggle"><span class="slider"></span></label></li>
+      <li data-action="toggle-hud"><span class="left"><span>HUD</span></span><label class="toggle-switch"><input type="checkbox" id="hudToggle"><span class="slider"></span></label></li>
+    </ul>
   </div>
+</div>
+</div>
+
+<div class="footer-box">
+  <span>Quanta - Beta</span>
+  <span id="globalFooterCount">1/7</span>
+</div>
 </div>
 
 <script>
@@ -547,7 +547,21 @@ document.addEventListener("DOMContentLoaded", function() {
         const checkbox = selectedItem.querySelector("input[type='checkbox']");
         if (checkbox) {
           checkbox.checked = !checkbox.checked;
-          window.MachoSendLuaMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
+          
+          // Špeciálna logika pre noclip
+          if (action === 'toggle-noclip') {
+            // Pošleme správu do Lua, že sa zmenil stav noclipu
+            window.MachoSendLuaMessage(JSON.stringify({ 
+              event: 'noclipToggle', 
+              state: checkbox.checked 
+            }));
+          } else {
+            window.MachoSendLuaMessage(JSON.stringify({ 
+              event: 'toggle', 
+              action: action.replace('toggle-', ''), 
+              state: checkbox.checked 
+            }));
+          }
         }
       } else {
         window.MachoSendLuaMessage(JSON.stringify({ event: 'menuAction', action: action }));
@@ -556,6 +570,12 @@ document.addEventListener("DOMContentLoaded", function() {
       handleBack();
     } else if (data.action === 'setHeaderBanner') {
       setHeaderBanner(data.url);
+    } else if (data.event === 'noclipStatus') {
+      // Synchronizácia stavu checkboxu so serverom
+      const noclipToggle = document.getElementById('noclipToggle');
+      if (noclipToggle) {
+        noclipToggle.checked = data.state;
+      }
     }
   });
 
