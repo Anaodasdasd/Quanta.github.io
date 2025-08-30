@@ -419,12 +419,12 @@
   }
 </style>
 <style>
-  .intro-overlay { position: fixed; inset: 0; background: transparent; color: #a8ffbf; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 6px rgba(168,255,191,.35)); z-index: 9999; }
+  .intro-overlay { position: fixed; inset: 0; background: transparent; color: #ffffff; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35)); z-index: 9999; }
   .intro-overlay .wrap { position: relative; display: inline-block; }
   .intro-overlay .line { font-size: 13px; letter-spacing: .4px; opacity: 0; transform: translateY(3px); animation: fadeUp .6s ease forwards .2s; white-space: pre; }
   .intro-overlay .caret { display: inline-block; width: 7px; margin-left: 2px; background: currentColor; height: 1em; transform: translateY(2px); animation: blink 1s steps(1) infinite; }
   .intro-overlay.scanlines::after { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .08; background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(255,255,255,.08) 3px); mix-blend-mode: soft-light; }
-  .intro-overlay .hud { position: fixed; inset: 10px; opacity: .28; font-size: 10px; color: #3a5f46; user-select: none; }
+  .intro-overlay .hud { position: fixed; inset: 10px; opacity: .28; font-size: 10px; color: #ffffff; user-select: none; }
   .intro-overlay .hud::before { content: "SYS: ONLINE"; position: absolute; left: 0; top: 0; }
   .intro-overlay .hud::after  { content: "CHKSUM OK"; position: absolute; right: 0; bottom: 0; }
   @keyframes blink { 50% { opacity: 0; } }
