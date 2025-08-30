@@ -418,10 +418,32 @@
     background: #7a7a7a;
   }
 </style>
+<style>
+  /* Intro overlay styles */
+  .intro-overlay { position: fixed; inset: 0; background: #0b0f11; color: #a8ffbf; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 6px rgba(168,255,191,.35)); z-index: 9999; }
+  .intro-overlay .wrap { position: relative; display: inline-block; }
+  .intro-overlay .line { font-size: 13px; letter-spacing: .4px; opacity: 0; transform: translateY(3px); animation: fadeUp .6s ease forwards .2s; white-space: pre; }
+  .intro-overlay .caret { display: inline-block; width: 7px; margin-left: 2px; background: currentColor; height: 1em; transform: translateY(2px); animation: blink 1s steps(1) infinite; }
+  .intro-overlay.scanlines::after { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .08; background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(255,255,255,.08) 3px); mix-blend-mode: soft-light; }
+  .intro-overlay .hud { position: fixed; inset: 10px; opacity: .28; font-size: 10px; color: #3a5f46; user-select: none; }
+  .intro-overlay .hud::before { content: "SYS: ONLINE"; position: absolute; left: 0; top: 0; }
+  .intro-overlay .hud::after  { content: "CHKSUM OK"; position: absolute; right: 0; bottom: 0; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+  @keyframes flicker { 0%, 100% { opacity: 1 } 92% { opacity: .7 } 95% { opacity: .3 } 97% { opacity: .8 } }
+</style>
 </head>
 <body>
 
-<div class="ui">
+<!-- Intro overlay shown first -->
+<div id="introOverlay" class="intro-overlay scanlines" role="dialog" aria-live="polite" aria-label="Initialization screen">
+  <div class="wrap">
+    <span id="introLine" class="line"></span><span id="introCaret" class="caret"></span>
+  </div>
+  <div class="hud" aria-hidden="true"></div>
+</div>
+
+<div class="ui hidden">
   <div class="header-box">
     <div id="headerBanner" class="header-banner">
       <img id="headerBannerImg" alt="banner">
@@ -904,6 +926,67 @@ document.addEventListener("DOMContentLoaded", function() {
   initSwipeBar();
   window.addEventListener('resize', resizeMenu);
 });
+</script>
+
+<script>
+// Run intro, then reveal menu
+(function() {
+  const INIT_TEXT = ">> inicializácia menu";
+  const FINAL_TEXT = "Decrypted text";
+  const lineEl = document.getElementById('introLine');
+  const caretEl = document.getElementById('introCaret');
+  const overlay = document.getElementById('introOverlay');
+  const uiRoot = document.querySelector('.ui');
+
+  // Simple typewriter
+  const type = (text, speed=40) => new Promise(resolve => {
+    let i = 0;
+    const iv = setInterval(() => {
+      lineEl.textContent = text.slice(0, i++);
+      if (i > text.length) { clearInterval(iv); resolve(); }
+    }, speed);
+  });
+
+  // Scramble/decrypt effect
+  const scrambleTo = (target, duration=1000, fps=40) => new Promise(resolve => {
+    const chars = "█░▒▓/\\|<>*+#$%@ABCDEFGHIJKLMN0123456789";
+    const steps = Math.max(1, Math.round((duration / 1000) * fps));
+    let frame = 0;
+    const revealOrder = [...target].map((_, i) => i).sort(() => Math.random()-0.5);
+    const revealed = new Set();
+    const iv = setInterval(() => {
+      const toReveal = Math.ceil((frame / steps) * target.length);
+      for (let i = 0; i < toReveal; i++) revealed.add(revealOrder[i]);
+      const out = [...target].map((ch, i) => revealed.has(i) ? ch : chars[(Math.random()*chars.length)|0]).join('');
+      lineEl.textContent = out;
+      frame++;
+      if (frame > steps) { clearInterval(iv); lineEl.textContent = target; resolve(); }
+    }, 1000 / fps);
+  });
+
+  const start = async () => {
+    // subtle flicker
+    document.body.style.animation = 'flicker .8s ease-in-out 1';
+    await new Promise(r => setTimeout(r, 150));
+    await type(INIT_TEXT, 40);
+    await new Promise(r => setTimeout(r, 450));
+    await scrambleTo(FINAL_TEXT, 1000, 40);
+    caretEl.style.display = 'none';
+    // Hide overlay, show UI
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity .25s ease';
+    setTimeout(() => {
+      overlay.remove();
+      uiRoot.classList.remove('hidden');
+    }, 250);
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', start);
+  } else {
+    start();
+  }
+})();
 </script>
 
 </body>
