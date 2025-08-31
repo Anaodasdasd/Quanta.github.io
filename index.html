@@ -8,9 +8,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
   :root {
-    --ui-width: 280px;
+    --ui-width: 300px;
     --menu-radius: 4px;
-    --item-height: 36px; /* Zmenšená výška položky */
+    --item-height: 30px; 
     --main-color: #636363;
     --max-visible-items: 7;
   }
@@ -39,8 +39,8 @@
     border: 1px solid #222;
     box-shadow: 0 0 30px rgba(50,50,50,0.5), 0 0 60px rgba(80,80,80,0.3);
     text-align: center;
-    margin-bottom: 8px; /* Zmenšená medzera */
-    height: 100px; /* Zmenšená výška */        
+    margin-bottom: 8px; 
+    height: 100px;     
     overflow: hidden;         
     animation: slowFadeIn 0.6s ease-out;
   }
@@ -56,12 +56,12 @@
   .nav-box {
     background: rgba(0,0,0,0.95);
     border-radius: var(--menu-radius);
-    padding: 8px 12px; /* Zmenšený padding */
+    padding: 8px 12px; 
     border: 1px solid #222;
     box-shadow: 0 0 15px rgba(50,50,50,0.4);
     text-align: center;
-    margin-bottom: 8px; /* Zmenšená medzera */
-    font-size: 12px; /* Zmenšené písmo */
+    margin-bottom: 8px; 
+    font-size: 12px; 
     font-weight: 500;
     display: flex;
     justify-content: center;
@@ -110,16 +110,14 @@
     width: 100%;
   }
 
-  /* Hlavné menu - so scrollbarom */
   #mainMenu .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
-    overflow-y: hidden;
+    overflow-y: auto;
   }
 
-  /* Ostatné menu - so scrollbarom */
   .menu-content .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
-    overflow-y: hidden;
+    overflow-y: auto;
     direction: rtl;
     padding-left: 4px;
   }
@@ -130,7 +128,7 @@
 
   .menu-list li {
     background: #0d0d0d;
-    padding: 0 12px; /* Zmenšený padding */
+    padding: 0 12px;
     height: var(--item-height);
     border-bottom: 1px solid #222;
     cursor: pointer;
@@ -162,27 +160,27 @@
   .menu-list li .left {
     display: inline-flex;
     align-items: center;
-    gap: 6px; /* Zmenšený gap */
+    gap: 6px; 
   }
 
   .menu-list li span {
     font-weight: 500;
     color: #ffffff;
-    font-size: 13px; /* Zmenšená veľkosť písma */
+    font-size: 13px; 
     letter-spacing: 0.3px;
   }
 
   .footer-box {
     background: rgba(0,0,0,0.95);
     border-radius: var(--menu-radius);
-    padding: 8px 12px; /* Zmenšený padding */
-    font-size: 11px; /* Zmenšené písmo */
+    padding: 8px 12px;
+    font-size: 11px; 
     display: flex;
     justify-content: space-between;
     border: 1px solid #222;
     text-shadow: 0 0 6px #555;
-    margin-top: 8px; /* Zmenšená medzera */
-    box-shadow: 0 0 30px rgba(50,50,50,0.5), 0 0 60px rgba(80,80,80,0.3);
+    margin-top: 8px; 
+    box-shadow: 0 0 30px rgba(50,50,50,0.5);
     width: 100%;                 
     box-sizing: border-box;
     font-weight: 500;
@@ -202,8 +200,8 @@
   .toggle-switch {
     position: relative;
     display: inline-block;
-    width: 34px; /* Zmenšená šírka */
-    height: 18px; /* Zmenšená výška */
+    width: 34px; 
+    height: 18px; 
   }
 
   .toggle-switch input {
@@ -228,8 +226,8 @@
   .slider:before {
     position: absolute;
     content: "";
-    height: 12px; /* Zmenšená veľkosť */
-    width: 12px; /* Zmenšená veľkosť */
+    height: 12px;
+    width: 12px; 
     left: 3px;
     bottom: 2px;
     background-color: #999;
@@ -243,14 +241,14 @@
   }
 
   input:checked + .slider:before {
-    transform: translateX(16px); /* Upravený posun */
+    transform: translateX(16px); 
     background-color: #fff;
   }
 
   .menu-icon {
-    width: 12px; /* Zmenšená šírka */
+    width: 15px;
     text-align: center;
-    font-size: 11px; /* Zmenšená veľkosť písma */
+    font-size: 1px; 
     color: var(--main-color);
   }
   
@@ -258,7 +256,6 @@
     color: var(--main-color);
   }
 
-  /* Jednoduchá pomalá animácia zjavenia */
   @keyframes slowFadeIn {
     from {
       opacity: 0;
@@ -285,13 +282,13 @@
     }
   }
 
-  /* Externý scrollbar - hrubší */
   .scrollbar-container {
     position: absolute;
     right: -14px;
     top: 0;
     height: 100%;
     width: 10px;
+    border-radius: 3px;
   }
 
   .scrollbar-track {
@@ -300,8 +297,8 @@
     top: 0;
     height: 100%;
     width: 8px;
-    background: #222;
-    border-radius: 4px;
+    background: #0e0e0e;
+    border-radius: 3px;
   }
 
   .scrollbar-thumb {
@@ -309,11 +306,10 @@
     right: 0;
     width: 8px;
     background-color: var(--main-color);
-    border-radius: 4px;
+    border-radius: 3px;
     transition: height 0.2s, top 0.2s;
   }
 
-  /* Nový box s nickom */
   .nick-box {
     position: absolute;
     right: 20px;
@@ -329,7 +325,6 @@
     animation: slowFadeIn 0.6s ease-out 0.4s both;
   }
 
-  /* Developer section styles */
   .developer-controls {
     padding: 10px;
     background: rgba(20, 20, 20, 0.8);
@@ -418,32 +413,10 @@
     background: #7a7a7a;
   }
 </style>
-<style>
-  /* Intro overlay styles */
-  .intro-overlay { position: fixed; inset: 0; background: #0b0f11; color: #a8ffbf; font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; display: flex; align-items: center; justify-content: center; filter: drop-shadow(0 0 6px rgba(168,255,191,.35)); z-index: 9999; }
-  .intro-overlay .wrap { position: relative; display: inline-block; }
-  .intro-overlay .line { font-size: 13px; letter-spacing: .4px; opacity: 0; transform: translateY(3px); animation: fadeUp .6s ease forwards .2s; white-space: pre; }
-  .intro-overlay .caret { display: inline-block; width: 7px; margin-left: 2px; background: currentColor; height: 1em; transform: translateY(2px); animation: blink 1s steps(1) infinite; }
-  .intro-overlay.scanlines::after { content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .08; background: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(255,255,255,.08) 3px); mix-blend-mode: soft-light; }
-  .intro-overlay .hud { position: fixed; inset: 10px; opacity: .28; font-size: 10px; color: #3a5f46; user-select: none; }
-  .intro-overlay .hud::before { content: "SYS: ONLINE"; position: absolute; left: 0; top: 0; }
-  .intro-overlay .hud::after  { content: "CHKSUM OK"; position: absolute; right: 0; bottom: 0; }
-  @keyframes blink { 50% { opacity: 0; } }
-  @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
-  @keyframes flicker { 0%, 100% { opacity: 1 } 92% { opacity: .7 } 95% { opacity: .3 } 97% { opacity: .8 } }
-</style>
 </head>
 <body>
 
-<!-- Intro overlay shown first -->
-<div id="introOverlay" class="intro-overlay scanlines" role="dialog" aria-live="polite" aria-label="Initialization screen">
-  <div class="wrap">
-    <span id="introLine" class="line"></span><span id="introCaret" class="caret"></span>
-  </div>
-  <div class="hud" aria-hidden="true"></div>
-</div>
-
-<div class="ui hidden">
+<div class="ui">
   <div class="header-box">
     <div id="headerBanner" class="header-banner">
       <img id="headerBannerImg" alt="banner">
@@ -532,7 +505,6 @@
         </ul>
       </div>
 
-      <!-- Nové menu pre UI pozíciu -->
       <div id="uiPositionMenu" class="menu-content hidden">
         <ul class="menu-list">
           <li data-action="reset-ui-position"><span class="left"><span>Reset Position</span></span></li>
@@ -564,7 +536,6 @@
       </div>
     </div>
     
-    <!-- Externý scrollbar container -->
     <div class="scrollbar-container" id="externalScrollbar">
       <div class="scrollbar-track"></div>
       <div class="scrollbar-thumb"></div>
@@ -619,40 +590,38 @@ document.addEventListener("DOMContentLoaded", function() {
   const scrollbarThumb = externalScrollbar.querySelector('.scrollbar-thumb');
   const uiElement = document.querySelector('.ui');
   
-  // UI Position elements
+  // Scroll sync state
+  let currentListEl = null;
+  let isDraggingScrollbar = false;
+  let dragOffsetY = 0;
+  
   const posXInput = document.getElementById('posX');
   const posYInput = document.getElementById('posY');
   const swipeBar = document.getElementById('swipeBar');
   const swipeHandle = document.getElementById('swipeHandle');
   const applyPositionBtn = document.getElementById('applyPosition');
 
-  // Načítanie uložených pozícií
   let uiPosition = {
     x: localStorage.getItem('uiPosX') ? parseInt(localStorage.getItem('uiPosX')) : 20,
     y: localStorage.getItem('uiPosY') ? parseInt(localStorage.getItem('uiPosY')) : 50
   };
   
-  // Aktualizácia UI pozície
   function updateUIPosition() {
     uiElement.style.left = uiPosition.x + 'px';
     uiElement.style.top = uiPosition.y + '%';
     uiElement.style.transform = 'translateY(-50%)';
     
-    // Uloženie do localStorage
     localStorage.setItem('uiPosX', uiPosition.x);
     localStorage.setItem('uiPosY', uiPosition.y);
     
-    // Aktualizácia vstupov
     posXInput.value = uiPosition.x;
     posYInput.value = uiPosition.y;
     
-    // Aktualizácia swipe handle
     updateSwipeHandle();
   }
   
-  // Aktualizácia pozície swipe handle
   function updateSwipeHandle() {
-    const maxPosition = 250; // Maximálna hodnota pre X
+    const maxPosition = 250; 
     const percentage = (uiPosition.x / maxPosition) * 100;
     const handlePosition = Math.min(Math.max(percentage, 0), 100);
     
@@ -677,7 +646,6 @@ document.addEventListener("DOMContentLoaded", function() {
       
       swipeHandle.style.left = `calc(${position}% - ${position * 0.24}px)`;
       
-      // Aktualizácia X pozície
       uiPosition.x = Math.round((position / 100) * 250);
       posXInput.value = uiPosition.x;
     });
@@ -693,16 +661,13 @@ document.addEventListener("DOMContentLoaded", function() {
       
       swipeHandle.style.left = `calc(${position}% - ${position * 0.24}px)`;
       
-      // Aktualizácia X pozície
       uiPosition.x = Math.round((position / 100) * 250);
       posXInput.value = uiPosition.x;
     });
     
-    // Aktualizácia handle pri načítaní
     updateSwipeHandle();
   }
   
-  // Spracovanie zmien v inputoch
   posXInput.addEventListener('change', function() {
     uiPosition.x = parseInt(this.value) || 20;
     updateUIPosition();
@@ -713,13 +678,80 @@ document.addEventListener("DOMContentLoaded", function() {
     updateUIPosition();
   });
   
-  // Aplikovanie pozície
   applyPositionBtn.addEventListener('click', function() {
     updateUIPosition();
   });
 
   function getCurrentList() {
     return currentMenu.querySelector('.menu-list');
+  }
+
+  function attachListScrollSync(list) {
+    if (!list) return;
+    if (currentListEl === list) return;
+
+    // Detach previous listener if any
+    if (currentListEl) {
+      currentListEl.removeEventListener('scroll', onListScroll, { passive: true });
+    }
+    currentListEl = list;
+    currentListEl.addEventListener('scroll', onListScroll, { passive: true });
+    updateExternalScrollbar();
+  }
+
+  function onListScroll() {
+    if (!currentListEl) return;
+
+    const totalScrollable = currentListEl.scrollHeight - currentListEl.clientHeight;
+    const trackHeight = currentListEl.clientHeight; // use visible height for positioning
+
+    // Keep external scrollbar container height equal to visible list height
+    externalScrollbar.style.height = trackHeight + 'px';
+
+    // Thumb height proportional to visible area
+    const thumbHeight = Math.max(20, (currentListEl.clientHeight / currentListEl.scrollHeight) * trackHeight);
+    const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+
+    const scrollTop = Math.max(0, Math.min(currentListEl.scrollTop, totalScrollable));
+    const ratio = totalScrollable > 0 ? (scrollTop / totalScrollable) : 0;
+    const thumbTop = ratio * maxThumbTop;
+
+    scrollbarThumb.style.height = thumbHeight + 'px';
+    scrollbarThumb.style.top = thumbTop + 'px';
+  }
+
+  function attachScrollbarDrag() {
+    const onMouseDown = (e) => {
+      if (e.target !== scrollbarThumb) return;
+      isDraggingScrollbar = true;
+      const rect = scrollbarThumb.getBoundingClientRect();
+      dragOffsetY = e.clientY - rect.top;
+      e.preventDefault();
+    };
+
+    const onMouseMove = (e) => {
+      if (!isDraggingScrollbar || !currentListEl) return;
+      const containerRect = externalScrollbar.getBoundingClientRect();
+
+      const trackHeight = currentListEl.clientHeight;
+      const thumbHeight = parseFloat(getComputedStyle(scrollbarThumb).height);
+      const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
+
+      let newTop = e.clientY - containerRect.top - dragOffsetY;
+      newTop = Math.max(0, Math.min(newTop, maxThumbTop));
+
+      const totalScrollable = currentListEl.scrollHeight - currentListEl.clientHeight;
+      const ratio = maxThumbTop > 0 ? (newTop / maxThumbTop) : 0;
+      currentListEl.scrollTop = ratio * totalScrollable;
+    };
+
+    const onMouseUp = () => {
+      isDraggingScrollbar = false;
+    };
+
+    externalScrollbar.addEventListener('mousedown', onMouseDown);
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('mouseup', onMouseUp);
   }
 
   function setHeaderBanner(url) {
@@ -736,7 +768,6 @@ document.addEventListener("DOMContentLoaded", function() {
     let path = "Main";
     let currentName = "";
     
-    // Get current menu name
     for (const [key, value] of Object.entries(menus)) {
       if (value === currentMenu) {
         currentName = menuNames[key];
@@ -744,7 +775,6 @@ document.addEventListener("DOMContentLoaded", function() {
       }
     }
     
-    // Build path from history
     if (history.length > 0) {
       const lastMenu = history[history.length - 1];
       for (const [key, value] of Object.entries(menus)) {
@@ -766,35 +796,21 @@ document.addEventListener("DOMContentLoaded", function() {
       menuItems[selectedIndex].classList.add('selected');
       menuItems[selectedIndex].scrollIntoView({ block: 'nearest' });
     }
-    updateExternalScrollbar();
+    // Keep thumb in sync with actual scrollTop
+    onListScroll();
   }
 
   function updateExternalScrollbar() {
-    const menuItems = currentMenu.querySelectorAll('.menu-list li');
-    
-    if (menuItems.length === 0) return;
-    
-    const itemHeight = menuItems[0].offsetHeight;
-    const visibleItems = Math.min(menuItems.length, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-visible-items')));
-    const totalHeight = menuItems.length * itemHeight;
-    const visibleHeight = visibleItems * itemHeight;
-    
-    // Vypočítaj pozíciu a veľkosť thumbu
-    const thumbHeight = Math.max(20, (visibleHeight / totalHeight) * visibleHeight);
-    const maxScroll = totalHeight - visibleHeight;
-    const scrollPosition = Math.min(selectedIndex * itemHeight, maxScroll);
-    const thumbPosition = maxScroll > 0 ? (scrollPosition / maxScroll) * (visibleHeight - thumbHeight) : 0;
-    
-    // Aktualizuj thumb
-    scrollbarThumb.style.height = thumbHeight + 'px';
-    scrollbarThumb.style.top = thumbPosition + 'px';
+    // Recompute thumb based on current list scroll state
+    const list = getCurrentList();
+    attachListScrollSync(list);
+    onListScroll();
   }
 
   function resizeMenu() {
     const list = currentMenu.querySelector('.menu-list');
     if (!list) return;
     
-    // Pre hlavné menu nastavíme fixnú výšku pre 7 položiek
     if (currentMenu.id === 'mainMenu') {
       const cs = window.getComputedStyle(menuBox);
       const pt = parseFloat(cs.paddingTop) || 0;
@@ -802,7 +818,6 @@ document.addEventListener("DOMContentLoaded", function() {
       const targetH = Math.round(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--item-height')) * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-visible-items')) + pt + pb);
       menuBox.style.height = targetH + 'px';
     } else {
-      // Pre ostatné menu nastavíme výšku podľa počtu položiek
       const items = list.querySelectorAll('li');
       if (items.length === 0) return;
 
@@ -822,7 +837,6 @@ document.addEventListener("DOMContentLoaded", function() {
     if (isAnimating) return;
     isAnimating = true;
     
-    // Pridaj animáciu pre odchod
     currentMenu.classList.add('animate-out');
     
     setTimeout(() => {
@@ -845,7 +859,10 @@ document.addEventListener("DOMContentLoaded", function() {
       updateNavigation();
 
       const newList = getCurrentList();
-      if (newList) newList.scrollTop = 0;
+      if (newList) {
+        newList.scrollTop = 0;
+        attachListScrollSync(newList);
+      }
     }, 300);
   }
 
@@ -875,7 +892,10 @@ document.addEventListener("DOMContentLoaded", function() {
       updateNavigation();
 
       const newList = getCurrentList();
-      if (newList) newList.scrollTop = 0;
+      if (newList) {
+        newList.scrollTop = 0;
+        attachListScrollSync(newList);
+      }
     }, 300);
   }
 
@@ -924,69 +944,11 @@ document.addEventListener("DOMContentLoaded", function() {
   resizeMenu();
   updateUIPosition();
   initSwipeBar();
-  window.addEventListener('resize', resizeMenu);
+  attachScrollbarDrag();
+  // ensure current list is bound
+  attachListScrollSync(getCurrentList());
+  window.addEventListener('resize', () => { resizeMenu(); onListScroll(); });
 });
-</script>
-
-<script>
-// Run intro, then reveal menu
-(function() {
-  const INIT_TEXT = ">> inicializácia menu";
-  const FINAL_TEXT = "Decrypted text";
-  const lineEl = document.getElementById('introLine');
-  const caretEl = document.getElementById('introCaret');
-  const overlay = document.getElementById('introOverlay');
-  const uiRoot = document.querySelector('.ui');
-
-  // Simple typewriter
-  const type = (text, speed=40) => new Promise(resolve => {
-    let i = 0;
-    const iv = setInterval(() => {
-      lineEl.textContent = text.slice(0, i++);
-      if (i > text.length) { clearInterval(iv); resolve(); }
-    }, speed);
-  });
-
-  // Scramble/decrypt effect
-  const scrambleTo = (target, duration=1000, fps=40) => new Promise(resolve => {
-    const chars = "█░▒▓/\\|<>*+#$%@ABCDEFGHIJKLMN0123456789";
-    const steps = Math.max(1, Math.round((duration / 1000) * fps));
-    let frame = 0;
-    const revealOrder = [...target].map((_, i) => i).sort(() => Math.random()-0.5);
-    const revealed = new Set();
-    const iv = setInterval(() => {
-      const toReveal = Math.ceil((frame / steps) * target.length);
-      for (let i = 0; i < toReveal; i++) revealed.add(revealOrder[i]);
-      const out = [...target].map((ch, i) => revealed.has(i) ? ch : chars[(Math.random()*chars.length)|0]).join('');
-      lineEl.textContent = out;
-      frame++;
-      if (frame > steps) { clearInterval(iv); lineEl.textContent = target; resolve(); }
-    }, 1000 / fps);
-  });
-
-  const start = async () => {
-    // subtle flicker
-    document.body.style.animation = 'flicker .8s ease-in-out 1';
-    await new Promise(r => setTimeout(r, 150));
-    await type(INIT_TEXT, 40);
-    await new Promise(r => setTimeout(r, 450));
-    await scrambleTo(FINAL_TEXT, 1000, 40);
-    caretEl.style.display = 'none';
-    // Hide overlay, show UI
-    overlay.style.opacity = '0';
-    overlay.style.transition = 'opacity .25s ease';
-    setTimeout(() => {
-      overlay.remove();
-      uiRoot.classList.remove('hidden');
-    }, 250);
-  };
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', start);
-  } else {
-    start();
-  }
-})();
 </script>
 
 </body>
