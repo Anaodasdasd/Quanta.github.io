@@ -1,885 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>cica menu</title>
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<style>
-  :root {
-    --ui-width: 300px;
-    --menu-radius: 4px;
-    --item-height: 30px; 
-    --main-color: #636363;
-    --max-visible-items: 7;
-  }
-
-  body {
-    background: transparent;
-    font-family: 'Lexend', Arial, sans-serif;
-    color: white;
-    min-height: 100vh;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  .ui {
-    position: absolute;
-    left: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: var(--ui-width);   
-  }
-
-  .header-box {
-    background: rgba(0,0,0,0.95);
-    border-radius: var(--menu-radius);
-    padding: 0;                 
-    border: 1px solid #222;
-    box-shadow: 0 0 30px rgba(50,50,50,0.5), 0 0 60px rgba(80,80,80,0.3);
-    text-align: center;
-    margin-bottom: 8px; 
-    height: 100px;     
-    overflow: hidden;         
-    animation: slowFadeIn 0.6s ease-out;
-  }
-
-  .header-banner { width: 100%; height: 100%; }
-  .header-banner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;        
-    display: block;
-  }
-
-  .nav-box {
-    background: rgba(0,0,0,0.95);
-    border-radius: var(--menu-radius);
-    padding: 8px 12px; 
-    border: 1px solid #222;
-    box-shadow: 0 0 15px rgba(50,50,50,0.4);
-    text-align: center;
-    margin-bottom: 8px; 
-    font-size: 12px; 
-    font-weight: 500;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    animation: slowFadeIn 0.6s ease-out 0.1s both;
-  }
-
-  .nav-path {
-    color: #ccc;
-  }
-
-  .nav-current {
-    color: #fff;
-    font-weight: 600;
-  }
-
-  .content-row {
-    display: flex;
-    gap: 0;
-    align-items: stretch;
-    position: relative;
-  }
-
-  .menu {
-    background: rgba(0,0,0,0.95);
-    border-radius: var(--menu-radius);
-    box-shadow: 0 0 30px rgba(50,50,50,0.8), 0 0 60px rgba(80,80,80,0.6);
-    padding: 0;              
-    position: relative;
-    width: 100%;                
-    min-width: 0;               
-    overflow: hidden;
-    animation: slowFadeIn 0.6s ease-out 0.2s both;
-  }
-
-  .menu-content { 
-    display: block; 
-    width: 100%;
-    transition: all 0.3s ease;
-  }
-
-  .menu-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 100%;
-  }
-
-  #mainMenu .menu-list {
-    max-height: calc(var(--item-height) * var(--max-visible-items));
-    overflow-y: hidden;
-  }
-
-  .menu-content .menu-list {
-    max-height: calc(var(--item-height) * var(--max-visible-items));
-    overflow-y: hidden;
-    direction: rtl;
-    padding-left: 4px;
-  }
-
-  .menu-content .menu-list li {
-    direction: ltr;
-  }
-
-  .menu-list li {
-    background: #0d0d0d;
-    padding: 0 12px;
-    height: var(--item-height);
-    border-bottom: 1px solid #222;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between; 
-    align-items: center;
-    transition: all 0.2s ease;
-    box-sizing: border-box;
-  }
-  .menu-list li:last-child { border-bottom: none; }
-
-  .menu-list li.selected {
-    background: #222;
-    box-shadow: inset 0 0 10px #333;
-    border-bottom-color: transparent;  
-  }
-
-  .menu-list li:hover {
-    background: #1a1a1a;
-  }
-
-  .menu-list li > span:last-child {
-    margin-left: auto;
-    padding-right: 4px; 
-    opacity: 0.9;
-    font-weight: 600;
-  }
-
-  .menu-list li .left {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px; 
-  }
-
-  .menu-list li span {
-    font-weight: 500;
-    color: #ffffff;
-    font-size: 13px; 
-    letter-spacing: 0.3px;
-  }
-
-  .footer-box {
-    background: rgba(0,0,0,0.95);
-    border-radius: var(--menu-radius);
-    padding: 8px 12px;
-    font-size: 11px; 
-    display: flex;
-    justify-content: space-between;
-    border: 1px solid #222;
-    text-shadow: 0 0 6px #555;
-    margin-top: 8px; 
-    box-shadow: 0 0 30px rgba(50,50,50,0.5);
-    width: 100%;                 
-    box-sizing: border-box;
-    font-weight: 500;
-    animation: slowFadeIn 0.6s ease-out 0.3s both;
-  }
-
-  .footer-box span:first-child {
-    color: var(--main-color);
-    font-weight: 600;
-  }
-
-  .hidden { 
-    display: none !important; 
-    opacity: 0;
-  }
-
-  .toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 34px; 
-    height: 18px; 
-  }
-
-  .toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #333;
-    transition: .4s;
-    border-radius: 34px;
-    border: 1px solid #555;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 12px;
-    width: 12px; 
-    left: 3px;
-    bottom: 2px;
-    background-color: #999;
-    transition: .4s;
-    border-radius: 50%;
-  }
-
-  input:checked + .slider {
-    background-color: var(--main-color);
-    border-color: var(--main-color);
-  }
-
-  input:checked + .slider:before {
-    transform: translateX(16px); 
-    background-color: #fff;
-  }
-
-  .menu-icon {
-    width: 15px;
-    text-align: center;
-    font-size: 1px; 
-    color: var(--main-color);
-  }
-  
-  .selected .menu-icon {
-    color: var(--main-color);
-  }
-
-  @keyframes slowFadeIn {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  .menu-content.animate-out {
-    animation: slowFadeOut 0.3s forwards;
-  }
-
-  .menu-content.animate-in {
-    animation: slowFadeIn 0.3s forwards;
-  }
-
-  @keyframes slowFadeOut {
-    from {
-      opacity: 1;
-    }
-    to {
-      opacity: 0;
-    }
-  }
-
-  .scrollbar-container {
-    position: absolute;
-    right: -14px;
-    top: 0;
-    height: 100%;
-    width: 10px;
-    border-radius: 3px;
-  }
-
-  .scrollbar-track {
-    position: absolute;
-    right: 0;
-    top: 0;
-    height: 100%;
-    width: 8px;
-    background: #0e0e0e;
-    border-radius: 3px;
-  }
-
-  .scrollbar-thumb {
-    position: absolute;
-    right: 0;
-    width: 8px;
-    background-color: var(--main-color);
-    border-radius: 3px;
-    transition: height 0.2s, top 0.2s;
-  }
-
-  .nick-box {
-    position: absolute;
-    right: 20px;
-    bottom: 20px;
-    background: rgba(0,0,0,0.95);
-    border-radius: var(--menu-radius);
-    padding: 8px 12px;
-    font-size: 12px;
-    border: 1px solid #222;
-    box-shadow: 0 0 15px rgba(50,50,50,0.4);
-    color: var(--main-color);
-    font-weight: 600;
-    animation: slowFadeIn 0.6s ease-out 0.4s both;
-  }
-
-  .developer-controls {
-    padding: 10px;
-    background: rgba(20, 20, 20, 0.8);
-    border-radius: var(--menu-radius);
-    margin-top: 10px;
-    border: 1px solid #333;
-  }
-
-  .coord-input {
-    display: flex;
-    align-items: center;
-    margin-bottom: 8px;
-  }
-
-  .coord-input label {
-    width: 20px;
-    margin-right: 8px;
-    color: var(--main-color);
-    font-weight: 600;
-  }
-
-  .coord-input input {
-    flex: 1;
-    background: #111;
-    border: 1px solid #333;
-    border-radius: 3px;
-    color: white;
-    padding: 5px 8px;
-    font-family: inherit;
-    font-size: 12px;
-  }
-
-  .swipe-container {
-    margin-top: 10px;
-  }
-
-  .swipe-label {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 5px;
-    font-size: 12px;
-    color: #ccc;
-  }
-
-  .swipe-bar {
-    height: 20px;
-    background: #222;
-    border-radius: 10px;
-    position: relative;
-    cursor: pointer;
-  }
-
-  .swipe-handle {
-    position: absolute;
-    width: 24px;
-    height: 24px;
-    background: var(--main-color);
-    border-radius: 50%;
-    top: -2px;
-    left: 0;
-    cursor: grab;
-    box-shadow: 0 0 5px rgba(0,0,0,0.5);
-    transition: background 0.2s;
-  }
-
-  .swipe-handle:active {
-    cursor: grabbing;
-    background: #7a7a7a;
-  }
-
-  .dev-button {
-    background: var(--main-color);
-    border: none;
-    color: white;
-    padding: 8px;
-    border-radius: 3px;
-    margin-top: 10px;
-    width: 100%;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 600;
-    transition: background 0.2s;
-  }
-
-  .dev-button:hover {
-    background: #7a7a7a;
-  }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cica menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Asimov&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
 </head>
 <body>
 
 <div class="ui">
-  <div class="header-box">
-    <div id="headerBanner" class="header-banner">
-      <img id="headerBannerImg" alt="banner">
-    </div>
-  </div>
-
-  <div class="nav-box">
-    <span id="navPath" class="nav-path">Main</span>
-    <span class="nav-current" id="navCurrent"> › Main</span>
-  </div>
-
-  <div class="content-row">
-    <div class="menu" id="menuBox">
-      <div id="mainMenu" class="menu-content">
-        <ul class="menu-list">
-          <li data-action="show-player"><span class="left"><span class="menu-icon"><i class="fas fa-user"></i></span><span>Player</span></span><span>›</span></li>
-          <li data-action="show-server"><span class="left"><span class="menu-icon"><i class="fas fa-server"></i></span><span>Server</span></span><span>›</span></li>
-          <li data-action="show-weapon"><span class="left"><span class="menu-icon"><i class="fas fa-gun"></i></span><span>Weapon</span></span><span>›</span></li>
-          <li data-action="show-vehicle"><span class="left"><span class="menu-icon"><i class="fas fa-car"></i></span><span>Vehicle</span></span><span>›</span></li>
-          <li data-action="show-teleport"><span class="left"><span class="menu-icon"><i class="fas fa-location-dot"></i></span><span>Teleport</span></span><span>›</span></li>
-          <li data-action="show-misc"><span class="left"><span class="menu-icon"><i class="fas fa-cubes"></i></span><span>Miscellaneous</span></span><span>›</span></li>
-          <li data-action="show-settings"><span class="left"><span class="menu-icon"><i class="fas fa-gear"></i></span><span>Settings</span></span><span>›</span></li>
-          <li data-action="show-developer"><span class="left"><span class="menu-icon"><i class="fas fa-code"></i></span><span>Developer</span></span><span>›</span></li>
-        </ul>
-      </div>
-
-      <div id="playerMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="toggle-godmode"><span class="left"><span>Godmode</span></span><label class="toggle-switch"><input type="checkbox" id="godmodeToggle"><span class="slider"></span></label></li>
-          <li data-action="toggle-invincible"><span class="left"><span>Invincible</span></span><label class="toggle-switch"><input type="checkbox" id="invincibleToggle"><span class="slider"></span></label></li>
-          <li data-action="toggle-noclip"><span class="left"><span>Noclip</span></span><label class="toggle-switch"><input type="checkbox" id="noclipToggle"><span class="slider"></span></label></li>
-          <li data-action="heal"><span class="left"><span>Heal Player</span></span></li>
-        </ul>
-      </div>
-
-      <div id="serverMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="toggle-infinite-ammo"><span class="left"><span>Infinite Ammo</span></span><label class="toggle-switch"><input type="checkbox" id="ammoToggle"><span class="slider"></span></label></li>
-          <li data-action="toggle-no-ragdoll"><span class="left"><span>No Ragdoll</span></span><label class="toggle-switch"><input type="checkbox" id="ragdollToggle"><span class="slider"></span></label></li>
-          <li data-action="kick-all"><span class="left"><span>Kick All Players</span></span></li>
-        </ul>
-      </div>
-
-      <div id="weaponMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="toggle-unlimited-clip"><span class="left"><span>Unlimited Clip</span></span><label class="toggle-switch"><input type="checkbox" id="clipToggle"><span class="slider"></span></label></li>
-          <li data-action="give-all-weapons"><span class="left"><span>Give All Weapons</span></span></li>
-        </ul>
-      </div>
-
-      <div id="vehicleMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="toggle-godmode-vehicle"><span class="left"><span>Vehicle Godmode</span></span><label class="toggle-switch"><input type="checkbox" id="vehicleGodmodeToggle"><span class="slider"></span></label></li>
-          <li data-action="repair-vehicle"><span class="left"><span>Repair Vehicle</span></span></li>
-          <li data-action="spawn-vehicle"><span class="left"><span>Spawn Vehicle</span></span></li>
-        </ul>
-      </div>
-
-      <div id="teleportMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="teleport-home"><span class="left"><span>Teleport Home</span></span></li>
-          <li data-action="teleport-job"><span class="left"><span>Teleport to Job</span></span></li>
-        </ul>
-      </div>
-
-      <div id="miscMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="toggle-nightvision"><span class="left"><span>Nightvision</span></span><label class="toggle-switch"><input type="checkbox" id="nightvisionToggle"><span class="slider"></span></label></li>
-          <li data-action="toggle-thermalvision"><span class="left"><span>Thermal Vision</span></span><label class="toggle-switch"><input type="checkbox" id="thermalvisionToggle"><span class="slider"></span></label></li>
-        </ul>
-      </div>
-
-      <div id="settingsMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="toggle-crosshair"><span class="left"><span>Crosshair</span></span><label class="toggle-switch"><input type="checkbox" id="crosshairToggle"><span class="slider"></span></label></li>
-          <li data-action="toggle-hud"><span class="left"><span>HUD</span></span><label class="toggle-switch"><input type="checkbox" id="hudToggle"><span class="slider"></span></label></li>
-        </ul>
-      </div>
-
-      <div id="developerMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="debug-info"><span class="left"><span>Debug Info</span></span></li>
-          <li data-action="reload-scripts"><span class="left"><span>Reload Scripts</span></span></li>
-          <li data-action="test-connection"><span class="left"><span>Test Connection</span></span></li>
-          <li data-action="ui-position"><span class="left"><span>UI Position</span></span><span>›</span></li>
-        </ul>
-      </div>
-
-      <div id="uiPositionMenu" class="menu-content hidden">
-        <ul class="menu-list">
-          <li data-action="reset-ui-position"><span class="left"><span>Reset Position</span></span></li>
-        </ul>
-        
-        <div class="developer-controls">
-          <div class="coord-input">
-            <label>X:</label>
-            <input type="number" id="posX" value="20">
-          </div>
-          <div class="coord-input">
-            <label>Y:</label>
-            <input type="number" id="posY" value="50">
-          </div>
-          
-          <div class="swipe-container">
-            <div class="swipe-label">
-              <span>Left</span>
-              <span>UI Position</span>
-              <span>Right</span>
-            </div>
-            <div class="swipe-bar" id="swipeBar">
-              <div class="swipe-handle" id="swipeHandle"></div>
-            </div>
-          </div>
-          
-          <button class="dev-button" id="applyPosition">Apply Position</button>
+    <div class="header-box">
+        <div id="headerBanner" class="header-banner">
+            <img id="headerBannerImg" alt="banner">
         </div>
-      </div>
     </div>
-    
-    <div class="scrollbar-container" id="externalScrollbar">
-      <div class="scrollbar-track"></div>
-      <div class="scrollbar-thumb"></div>
-    </div>
-  </div>
 
-  <div class="footer-box">
-    <span>Quanta - Beta</span>
-  </div>
+    <div class="nav-box">
+        <span id="navPath" class="nav-path">Main</span>
+        <span class="nav-current" id="navCurrent"> › Main</span>
+    </div>
+
+    <div class="content-row">
+        <div class="menu" id="menuBox">
+            <div id="mainMenu" class="menu-content">
+                <ul class="menu-list">
+                    <li data-action="show-player"><span class="left"><span class="menu-icon"><i class="fas fa-user"></i></span><span>Player</span></span><span>›</span></li>
+                    <li data-action="show-server"><span class="left"><span class="menu-icon"><i class="fas fa-server"></i></span><span>Server</span></span><span>›</span></li>
+                    <li data-action="show-weapon"><span class="left"><span class="menu-icon"><i class="fas fa-gun"></i></span><span>Weapon</span></span><span>›</span></li>
+                    <li data-action="show-vehicle"><span class="left"><span class="menu-icon"><i class="fas fa-car"></i></span><span>Vehicle</span></span><span>›</span></li>
+                    <li data-action="show-teleport"><span class="left"><span class="menu-icon"><i class="fas fa-location-dot"></i></span><span>Teleport</span></span><span>›</span></li>
+                    <li data-action="show-misc"><span class="left"><span class="menu-icon"><i class="fas fa-cubes"></i></span><span>Miscellaneous</span></span><span>›</span></li>
+                    <li data-action="show-settings"><span class="left"><span class="menu-icon"><i class="fas fa-gear"></i></span><span>Settings</span></span><span>›</span></li>
+                    <li data-action="show-developer"><span class="left"><span class="menu-icon"><i class="fas fa-code"></i></span><span>Developer</span></span><span>›</span></li>
+                </ul>
+            </div>
+
+            <div id="playerMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-godmode"><span class="left"><span>Godmode</span></span><label class="toggle-switch"><input type="checkbox" id="godmodeToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-invincible"><span class="left"><span>Invincible</span></span><label class="toggle-switch"><input type="checkbox" id="invincibleToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-noclip"><span class="left"><span>Noclip</span></span><label class="toggle-switch"><input type="checkbox" id="noclipToggle"><span class="slider"></span></label></li>
+                    <li data-action="heal"><span class="left"><span>Heal Player</span></span></li>
+                </ul>
+            </div>
+
+            <div id="serverMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-infinite-ammo"><span class="left"><span>Infinite Ammo</span></span><label class="toggle-switch"><input type="checkbox" id="ammoToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-no-ragdoll"><span class="left"><span>No Ragdoll</span></span><label class="toggle-switch"><input type="checkbox" id="ragdollToggle"><span class="slider"></span></label></li>
+                    <li data-action="kick-all"><span class="left"><span>Kick All Players</span></span></li>
+                </ul>
+            </div>
+
+            <div id="weaponMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-unlimited-clip"><span class="left"><span>Unlimited Clip</span></span><label class="toggle-switch"><input type="checkbox" id="clipToggle"><span class="slider"></span></label></li>
+                    <li data-action="give-all-weapons"><span class="left"><span>Give All Weapons</span></span></li>
+                </ul>
+            </div>
+
+            <div id="vehicleMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-godmode-vehicle"><span class="left"><span>Vehicle Godmode</span></span><label class="toggle-switch"><input type="checkbox" id="vehicleGodmodeToggle"><span class="slider"></span></label></li>
+                    <li data-action="repair-vehicle"><span class="left"><span>Repair Vehicle</span></span></li>
+                    <li data-action="spawn-vehicle"><span class="left"><span>Spawn Vehicle</span></span></li>
+                </ul>
+            </div>
+
+            <div id="teleportMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="teleport-home"><span class="left"><span>Teleport Home</span></span></li>
+                    <li data-action="teleport-job"><span class="left"><span>Teleport to Job</span></span></li>
+                </ul>
+            </div>
+
+            <div id="miscMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-nightvision"><span class="left"><span>Nightvision</span></span><label class="toggle-switch"><input type="checkbox" id="nightvisionToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-thermalvision"><span class="left"><span>Thermal Vision</span></span><label class="toggle-switch"><input type="checkbox" id="thermalvisionToggle"><span class="slider"></span></label></li>
+                </ul>
+            </div>
+
+            <div id="settingsMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-crosshair"><span class="left"><span>Crosshair</span></span><label class="toggle-switch"><input type="checkbox" id="crosshairToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-hud"><span class="left"><span>HUD</span></span><label class="toggle-switch"><input type="checkbox" id="hudToggle"><span class="slider"></span></label></li>
+                </ul>
+            </div>
+
+            <div id="developerMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="debug-info"><span class="left"><span>Debug Info</span></span></li>
+                    <li data-action="reload-scripts"><span class="left"><span>Reload Scripts</span></span></li>
+                    <li data-action="test-connection"><span class="left"><span>Test Connection</span></span></li>
+                    <li data-action="ui-position"><span class="left"><span>UI Position</span></span><span>›</span></li>
+                </ul>
+            </div>
+
+            <div id="uiPositionMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="reset-ui-position"><span class="left"><span>Reset Position</span></span></li>
+                </ul>
+                
+                <div class="developer-controls">
+                    <div class="coord-input">
+                        <label>X:</label>
+                        <input type="number" id="posX" value="20">
+                    </div>
+                    <div class="coord-input">
+                        <label>Y:</label>
+                        <input type="number" id="posY" value="50">
+                    </div>
+                    
+                    <div class="swipe-container">
+                        <div class="swipe-label">
+                            <span>Left</span>
+                            <span>UI Position</span>
+                            <span>Right</span>
+                        </div>
+                        <div class="swipe-bar" id="swipeBar">
+                            <div class="swipe-handle" id="swipeHandle"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="dev-button" id="applyPosition">Apply Position</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scrollbar-container" id="externalScrollbar">
+            <div class="scrollbar-track"></div>
+            <div class="scrollbar-thumb"></div>
+        </div>
+    </div>
+
+    <div class="footer-box">
+        <span>Quanta - Beta</span>
+    </div>
 </div>
 
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-  const DEFAULT_BANNER_URL = 'https://cdn.discordapp.com/attachments/1337202405913399329/1410763134037397586/3C673ED6-75E1-4798-BD1D-E79B33D14ACE.png?ex=68b2dbcd&is=68b18a4d&hm=be1ebbb5fdba10841b7fc033d540b2931533e7339107ae8297e6770904bc8e27&';
-
-  const menus = {
-    mainMenu: document.getElementById("mainMenu"),
-    player: document.getElementById("playerMenu"),
-    server: document.getElementById("serverMenu"),
-    weapon: document.getElementById("weaponMenu"),
-    vehicle: document.getElementById("vehicleMenu"),
-    teleport: document.getElementById("teleportMenu"),
-    misc: document.getElementById("miscMenu"),
-    settings: document.getElementById("settingsMenu"),
-    developer: document.getElementById("developerMenu"),
-    uiPosition: document.getElementById("uiPositionMenu")
-  };
-
-  const menuNames = {
-    mainMenu: "Main",
-    player: "Player",
-    server: "Server",
-    weapon: "Weapon",
-    vehicle: "Vehicle",
-    teleport: "Teleport",
-    misc: "Miscellaneous",
-    settings: "Settings",
-    developer: "Developer",
-    uiPosition: "UI Position"
-  };
-
-  let currentMenu = menus.mainMenu;
-  let selectedIndex = 0;
-  let history = [];
-  let isAnimating = false;
-
-  const headerBannerImg = document.getElementById('headerBannerImg');
-  const menuBox = document.getElementById('menuBox');
-  const navPath = document.getElementById('navPath');
-  const navCurrent = document.getElementById('navCurrent');
-  const externalScrollbar = document.getElementById('externalScrollbar');
-  const scrollbarThumb = externalScrollbar.querySelector('.scrollbar-thumb');
-  const uiElement = document.querySelector('.ui');
-  
-  const posXInput = document.getElementById('posX');
-  const posYInput = document.getElementById('posY');
-  const swipeBar = document.getElementById('swipeBar');
-  const swipeHandle = document.getElementById('swipeHandle');
-  const applyPositionBtn = document.getElementById('applyPosition');
-
-  let uiPosition = {
-    x: localStorage.getItem('uiPosX') ? parseInt(localStorage.getItem('uiPosX')) : 20,
-    y: localStorage.getItem('uiPosY') ? parseInt(localStorage.getItem('uiPosY')) : 50
-  };
-  
-  function updateUIPosition() {
-    uiElement.style.left = uiPosition.x + 'px';
-    uiElement.style.top = uiPosition.y + '%';
-    uiElement.style.transform = 'translateY(-50%)';
-    
-    localStorage.setItem('uiPosX', uiPosition.x);
-    localStorage.setItem('uiPosY', uiPosition.y);
-    
-    posXInput.value = uiPosition.x;
-    posYInput.value = uiPosition.y;
-    
-    updateSwipeHandle();
-  }
-  
-  function updateSwipeHandle() {
-    const maxPosition = 250; 
-    const percentage = (uiPosition.x / maxPosition) * 100;
-    const handlePosition = Math.min(Math.max(percentage, 0), 100);
-    
-    swipeHandle.style.left = `calc(${handlePosition}% - ${handlePosition * 0.24}px)`;
-  }
-  
-  // Inicializácia swipe baru
-  function initSwipeBar() {
-    let isDragging = false;
-    
-    swipeHandle.addEventListener('mousedown', function(e) {
-      isDragging = true;
-      e.preventDefault();
-    });
-    
-    document.addEventListener('mousemove', function(e) {
-      if (!isDragging) return;
-      
-      const barRect = swipeBar.getBoundingClientRect();
-      let position = ((e.clientX - barRect.left) / barRect.width) * 100;
-      position = Math.min(Math.max(position, 0), 100);
-      
-      swipeHandle.style.left = `calc(${position}% - ${position * 0.24}px)`;
-      
-      uiPosition.x = Math.round((position / 100) * 250);
-      posXInput.value = uiPosition.x;
-    });
-    
-    document.addEventListener('mouseup', function() {
-      isDragging = false;
-    });
-    
-    swipeBar.addEventListener('click', function(e) {
-      const barRect = swipeBar.getBoundingClientRect();
-      let position = ((e.clientX - barRect.left) / barRect.width) * 100;
-      position = Math.min(Math.max(position, 0), 100);
-      
-      swipeHandle.style.left = `calc(${position}% - ${position * 0.24}px)`;
-      
-      uiPosition.x = Math.round((position / 100) * 250);
-      posXInput.value = uiPosition.x;
-    });
-    
-    updateSwipeHandle();
-  }
-  
-  posXInput.addEventListener('change', function() {
-    uiPosition.x = parseInt(this.value) || 20;
-    updateUIPosition();
-  });
-  
-  posYInput.addEventListener('change', function() {
-    uiPosition.y = parseInt(this.value) || 50;
-    updateUIPosition();
-  });
-  
-  applyPositionBtn.addEventListener('click', function() {
-    updateUIPosition();
-  });
-
-  function getCurrentList() {
-    return currentMenu.querySelector('.menu-list');
-  }
-
-  function setHeaderBanner(url) {
-    headerBannerImg.src = url || DEFAULT_BANNER_URL;
-  }
-
-  function updateNavigation() {
-    if (history.length === 0) {
-      navPath.textContent = "Main";
-      navCurrent.textContent = " › Main";
-      return;
-    }
-    
-    let path = "Main";
-    let currentName = "";
-    
-    for (const [key, value] of Object.entries(menus)) {
-      if (value === currentMenu) {
-        currentName = menuNames[key];
-        break;
-      }
-    }
-    
-    if (history.length > 0) {
-      const lastMenu = history[history.length - 1];
-      for (const [key, value] of Object.entries(menus)) {
-        if (value === lastMenu) {
-          path = menuNames[key];
-          break;
-        }
-      }
-    }
-    
-    navPath.textContent = path;
-    navCurrent.textContent = ` › ${currentName}`;
-  }
-
-  function updateSelection() {
-    const menuItems = currentMenu.querySelectorAll('.menu-list li');
-    document.querySelectorAll('.menu-list li.selected').forEach(el => el.classList.remove('selected'));
-    if (menuItems.length > 0) {
-      menuItems[selectedIndex].classList.add('selected');
-      menuItems[selectedIndex].scrollIntoView({ block: 'nearest' });
-    }
-    updateExternalScrollbar();
-  }
-
-  function updateExternalScrollbar() {
-    const menuItems = currentMenu.querySelectorAll('.menu-list li');
-    
-    if (menuItems.length === 0) return;
-    
-    const itemHeight = menuItems[0].offsetHeight;
-    const visibleItems = Math.min(menuItems.length, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-visible-items')));
-    const totalHeight = menuItems.length * itemHeight;
-    const visibleHeight = visibleItems * itemHeight;
-    
-    const thumbHeight = Math.max(20, (visibleHeight / totalHeight) * visibleHeight);
-    const maxScroll = totalHeight - visibleHeight;
-    const scrollPosition = Math.min(selectedIndex * itemHeight, maxScroll);
-    const thumbPosition = maxScroll > 0 ? (scrollPosition / maxScroll) * (visibleHeight - thumbHeight) : 0;
-    
-  
-    scrollbarThumb.style.height = thumbHeight + 'px';
-    scrollbarThumb.style.top = thumbPosition + 'px';
-  }
-
-  function resizeMenu() {
-    const list = currentMenu.querySelector('.menu-list');
-    if (!list) return;
-    
-    if (currentMenu.id === 'mainMenu') {
-      const cs = window.getComputedStyle(menuBox);
-      const pt = parseFloat(cs.paddingTop) || 0;
-      const pb = parseFloat(cs.paddingBottom) || 0;
-      const targetH = Math.round(parseInt(getComputedStyle(document.documentElement).getPropertyValue('--item-height')) * parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-visible-items')) + pt + pb);
-      menuBox.style.height = targetH + 'px';
-    } else {
-      const items = list.querySelectorAll('li');
-      if (items.length === 0) return;
-
-      const itemHeight = items[0].getBoundingClientRect().height;
-      const cs = window.getComputedStyle(menuBox);
-      const pt = parseFloat(cs.paddingTop) || 0;
-      const pb = parseFloat(cs.paddingBottom) || 0;
-
-      const targetH = Math.round(itemHeight * items.length + pt + pb);
-      menuBox.style.height = targetH + 'px';
-    }
-    
-    updateExternalScrollbar();
-  }
-
-  function showMenu(menuId) {
-    if (isAnimating) return;
-    isAnimating = true;
-    
-    currentMenu.classList.add('animate-out');
-    
-    setTimeout(() => {
-      currentMenu.classList.add('hidden');
-      currentMenu.classList.remove('animate-out');
-      
-      history.push(currentMenu);
-      currentMenu = menus[menuId];
-      currentMenu.classList.remove('hidden');
-      currentMenu.classList.add('animate-in');
-      
-      setTimeout(() => {
-        currentMenu.classList.remove('animate-in');
-        isAnimating = false;
-      }, 300);
-
-      selectedIndex = 0;
-      updateSelection();
-      resizeMenu();
-      updateNavigation();
-
-      const newList = getCurrentList();
-      if (newList) newList.scrollTop = 0;
-    }, 300);
-  }
-
-  function handleBack() {
-    if (isAnimating || history.length === 0) return;
-    isAnimating = true;
-    
-    // Pridaj animáciu pre odchod
-    currentMenu.classList.add('animate-out');
-    
-    setTimeout(() => {
-      currentMenu.classList.add('hidden');
-      currentMenu.classList.remove('animate-out');
-      
-      currentMenu = history.pop();
-      currentMenu.classList.remove('hidden');
-      currentMenu.classList.add('animate-in');
-      
-      setTimeout(() => {
-        currentMenu.classList.remove('animate-in');
-        isAnimating = false;
-      }, 300);
-
-      selectedIndex = 0;
-      updateSelection();
-      resizeMenu();
-      updateNavigation();
-
-      const newList = getCurrentList();
-      if (newList) newList.scrollTop = 0;
-    }, 300);
-  }
-
-  window.addEventListener('message', function(event) {
-    const data = event.data || {};
-    const menuItems = currentMenu.querySelectorAll('.menu-list li');
-
-    if (data.action === 'navigate') {
-      if (menuItems.length === 0) return;
-      selectedIndex = data.direction === 'up'
-        ? (selectedIndex - 1 + menuItems.length) % menuItems.length
-        : (selectedIndex + 1) % menuItems.length;
-      updateSelection();
-    } else if (data.action === 'select') {
-      if (menuItems.length === 0) return;
-      const selectedItem = menuItems[selectedIndex];
-      const action = selectedItem.getAttribute('data-action');
-
-      if (action.startsWith('show-')) {
-        showMenu(action.replace('show-', ''));
-      } else if (action.startsWith('toggle-')) {
-        const checkbox = selectedItem.querySelector("input[type='checkbox']");
-        if (checkbox) {
-          checkbox.checked = !checkbox.checked;
-          window.MachoSendLuaMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
-        }
-      } else if (action === 'ui-position') {
-        showMenu('uiPosition');
-      } else if (action === 'reset-ui-position') {
-        uiPosition = { x: 20, y: 50 };
-        updateUIPosition();
-      } else {
-        window.MachoSendLuaMessage(JSON.stringify({ event: 'menuAction', action: action }));
-      }
-    } else if (data.action === 'back') {
-      handleBack();
-    } else if (data.action === 'setHeaderBanner') {
-      setHeaderBanner(data.url);
-    }
-  });
-
-  // Inicializácia
-  updateSelection();
-  updateNavigation();
-  setHeaderBanner(DEFAULT_BANNER_URL);
-  resizeMenu();
-  updateUIPosition();
-  initSwipeBar();
-  window.addEventListener('resize', resizeMenu);
-});
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
