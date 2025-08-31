@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function() {
-    const DEFAULT_BANNER_URL = 'https://cdn.discordapp.com/attachments/1337202405913399329/1410763134037397586/3C673ED6-75E1-4798-BD1D-E79B33D14ACE.png?ex=68b2dbcd&is=68b18a4d&hm=be1ebbb5fdba10841b7fc033d540b2931533e7339107ae8297e6770904bc8e27&';
+    const DEFAULT_BANNER_URL = 'https://cdn.discordapp.com/attachments/1337202405913399329/1411647371724718130/IMG_3476.jpg?ex=68b56a90&is=68b41910&hm=ee6242098c11cea3e1b1c0cd07fb698230f5a22b261416a2bdc86831a6f76772&';
 
     const menus = {
         mainMenu: document.getElementById("mainMenu"),
