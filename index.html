@@ -112,12 +112,12 @@
 
   #mainMenu .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
-    overflow-y: auto;
+    overflow-y: hidden;
   }
 
   .menu-content .menu-list {
     max-height: calc(var(--item-height) * var(--max-visible-items));
-    overflow-y: auto;
+    overflow-y: hidden;
     direction: rtl;
     padding-left: 4px;
   }
@@ -590,11 +590,6 @@ document.addEventListener("DOMContentLoaded", function() {
   const scrollbarThumb = externalScrollbar.querySelector('.scrollbar-thumb');
   const uiElement = document.querySelector('.ui');
   
-  // Scroll sync state
-  let currentListEl = null;
-  let isDraggingScrollbar = false;
-  let dragOffsetY = 0;
-  
   const posXInput = document.getElementById('posX');
   const posYInput = document.getElementById('posY');
   const swipeBar = document.getElementById('swipeBar');
@@ -686,74 +681,6 @@ document.addEventListener("DOMContentLoaded", function() {
     return currentMenu.querySelector('.menu-list');
   }
 
-  function attachListScrollSync(list) {
-    if (!list) return;
-    if (currentListEl === list) return;
-
-    // Detach previous listener if any
-    if (currentListEl) {
-      currentListEl.removeEventListener('scroll', onListScroll, { passive: true });
-    }
-    currentListEl = list;
-    currentListEl.addEventListener('scroll', onListScroll, { passive: true });
-    updateExternalScrollbar();
-  }
-
-  function onListScroll() {
-    if (!currentListEl) return;
-
-    const totalScrollable = currentListEl.scrollHeight - currentListEl.clientHeight;
-    const trackHeight = currentListEl.clientHeight; // use visible height for positioning
-
-    // Keep external scrollbar container height equal to visible list height
-    externalScrollbar.style.height = trackHeight + 'px';
-
-    // Thumb height proportional to visible area
-    const thumbHeight = Math.max(20, (currentListEl.clientHeight / currentListEl.scrollHeight) * trackHeight);
-    const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
-
-    const scrollTop = Math.max(0, Math.min(currentListEl.scrollTop, totalScrollable));
-    const ratio = totalScrollable > 0 ? (scrollTop / totalScrollable) : 0;
-    const thumbTop = ratio * maxThumbTop;
-
-    scrollbarThumb.style.height = thumbHeight + 'px';
-    scrollbarThumb.style.top = thumbTop + 'px';
-  }
-
-  function attachScrollbarDrag() {
-    const onMouseDown = (e) => {
-      if (e.target !== scrollbarThumb) return;
-      isDraggingScrollbar = true;
-      const rect = scrollbarThumb.getBoundingClientRect();
-      dragOffsetY = e.clientY - rect.top;
-      e.preventDefault();
-    };
-
-    const onMouseMove = (e) => {
-      if (!isDraggingScrollbar || !currentListEl) return;
-      const containerRect = externalScrollbar.getBoundingClientRect();
-
-      const trackHeight = currentListEl.clientHeight;
-      const thumbHeight = parseFloat(getComputedStyle(scrollbarThumb).height);
-      const maxThumbTop = Math.max(0, trackHeight - thumbHeight);
-
-      let newTop = e.clientY - containerRect.top - dragOffsetY;
-      newTop = Math.max(0, Math.min(newTop, maxThumbTop));
-
-      const totalScrollable = currentListEl.scrollHeight - currentListEl.clientHeight;
-      const ratio = maxThumbTop > 0 ? (newTop / maxThumbTop) : 0;
-      currentListEl.scrollTop = ratio * totalScrollable;
-    };
-
-    const onMouseUp = () => {
-      isDraggingScrollbar = false;
-    };
-
-    externalScrollbar.addEventListener('mousedown', onMouseDown);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseup', onMouseUp);
-  }
-
   function setHeaderBanner(url) {
     headerBannerImg.src = url || DEFAULT_BANNER_URL;
   }
@@ -796,15 +723,27 @@ document.addEventListener("DOMContentLoaded", function() {
       menuItems[selectedIndex].classList.add('selected');
       menuItems[selectedIndex].scrollIntoView({ block: 'nearest' });
     }
-    // Keep thumb in sync with actual scrollTop
-    onListScroll();
+    updateExternalScrollbar();
   }
 
   function updateExternalScrollbar() {
-    // Recompute thumb based on current list scroll state
-    const list = getCurrentList();
-    attachListScrollSync(list);
-    onListScroll();
+    const menuItems = currentMenu.querySelectorAll('.menu-list li');
+    
+    if (menuItems.length === 0) return;
+    
+    const itemHeight = menuItems[0].offsetHeight;
+    const visibleItems = Math.min(menuItems.length, parseInt(getComputedStyle(document.documentElement).getPropertyValue('--max-visible-items')));
+    const totalHeight = menuItems.length * itemHeight;
+    const visibleHeight = visibleItems * itemHeight;
+    
+    const thumbHeight = Math.max(20, (visibleHeight / totalHeight) * visibleHeight);
+    const maxScroll = totalHeight - visibleHeight;
+    const scrollPosition = Math.min(selectedIndex * itemHeight, maxScroll);
+    const thumbPosition = maxScroll > 0 ? (scrollPosition / maxScroll) * (visibleHeight - thumbHeight) : 0;
+    
+  
+    scrollbarThumb.style.height = thumbHeight + 'px';
+    scrollbarThumb.style.top = thumbPosition + 'px';
   }
 
   function resizeMenu() {
@@ -859,10 +798,7 @@ document.addEventListener("DOMContentLoaded", function() {
       updateNavigation();
 
       const newList = getCurrentList();
-      if (newList) {
-        newList.scrollTop = 0;
-        attachListScrollSync(newList);
-      }
+      if (newList) newList.scrollTop = 0;
     }, 300);
   }
 
@@ -892,10 +828,7 @@ document.addEventListener("DOMContentLoaded", function() {
       updateNavigation();
 
       const newList = getCurrentList();
-      if (newList) {
-        newList.scrollTop = 0;
-        attachListScrollSync(newList);
-      }
+      if (newList) newList.scrollTop = 0;
     }, 300);
   }
 
@@ -944,10 +877,7 @@ document.addEventListener("DOMContentLoaded", function() {
   resizeMenu();
   updateUIPosition();
   initSwipeBar();
-  attachScrollbarDrag();
-  // ensure current list is bound
-  attachListScrollSync(getCurrentList());
-  window.addEventListener('resize', () => { resizeMenu(); onListScroll(); });
+  window.addEventListener('resize', resizeMenu);
 });
 </script>
 
