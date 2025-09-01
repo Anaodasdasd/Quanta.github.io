@@ -37,14 +37,47 @@
                 </ul>
             </div>
 
-            <div id="playerMenu" class="menu-content hidden">
-                <ul class="menu-list">
-                    <li data-action="toggle-godmode"><span class="left"><span>Godmode</span></span><label class="toggle-switch"><input type="checkbox" id="godmodeToggle"><span class="slider"></span></label></li>
-                    <li data-action="toggle-invincible"><span class="left"><span>Invincible</span></span><label class="toggle-switch"><input type="checkbox" id="invincibleToggle"><span class="slider"></span></label></li>
-                    <li data-action="toggle-noclip"><span class="left"><span>Noclip</span></span><label class="toggle-switch"><input type="checkbox" id="noclipToggle"><span class="slider"></span></label></li>
-                    <li data-action="heal"><span class="left"><span>Heal Player</span></span></li>
-                </ul>
-            </div>
+<div id="playerMenu" class="menu-content hidden">
+    <ul class="menu-list">
+        <!-- Prepínače -->
+        <li data-action="toggle-godmode">
+            <span class="left"><span>Godmode</span></span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="godmodeToggle">
+                <span class="slider"></span>
+            </label>
+        </li>
+
+        <li data-action="toggle-invincible">
+            <span class="left"><span>Invincible</span></span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="invincibleToggle">
+                <span class="slider"></span>
+            </label>
+        </li>
+
+        <li data-action="toggle-noclip">
+            <span class="left"><span>Noclip</span></span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="noclipToggle">
+                <span class="slider"></span>
+            </label>
+        </li>
+
+        <!-- Heal ako button s guľkou -->
+        <li data-action="heal">
+            <span class="left"><span>Heal Player</span></span>
+            <span class="circle-btn"></span>
+        </li>
+
+        <!-- Slider (0 - 100) -->
+        <li data-action="speed">
+            <span class="left"><span>Speed</span></span>
+            <input type="range" min="0" max="100" value="50" class="slider-range">
+        </li>
+    </ul>
+</div>
+
 
             <div id="serverMenu" class="menu-content hidden">
                 <ul class="menu-list">
