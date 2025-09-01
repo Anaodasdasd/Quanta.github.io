@@ -2,13 +2,13 @@
     --ui-width: 300px;
     --menu-radius: 4px;
     --item-height: 30px; 
-    --main-color: #403369;
+    --main-color: #636363;
     --max-visible-items: 7;
 }
 
 body {
     background: transparent;
-    font-family: 'JetBrains Mono', Arial, sans-serif;
+    font-family: 'Asimov', Arial, sans-serif;
     color: white;
     min-height: 100vh;
     margin: 0;
@@ -402,4 +402,4 @@ input:checked + .slider:before {
 
 .dev-button:hover {
     background: #7a7a7a;
-} 
+}
