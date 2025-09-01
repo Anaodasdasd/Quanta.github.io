@@ -320,22 +320,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
-    <script>
-document.addEventListener("DOMContentLoaded", () => {
-    const noclipToggle = document.getElementById("noclipToggle");
-    const speedControl = document.getElementById("speedControl");
-
-    noclipToggle.addEventListener("change", () => {
-        if (noclipToggle.checked) {
-            speedControl.style.display = "flex"; // ukáže slider
-        } else {
-            speedControl.style.display = "none"; // schová slider
-        }
-    });
-});
-</script>
-
-
     // Inicializácia
     updateSelection();
     updateNavigation();
