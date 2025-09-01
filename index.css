@@ -403,3 +403,54 @@ input:checked + .slider:before {
 .dev-button:hover {
     background: #7a7a7a;
 }
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  list-style: none;
+}
+
+/* Guľka napravo */
+.circle-btn {
+  width: 14px;
+  height: 14px;
+  background-color: #fff;
+  border-radius: 50%;
+  border: 2px solid #555;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.circle-btn:hover {
+  background-color: #555;
+}
+
+/* Slider (od 0 do 100) */
+.slider-range {
+  -webkit-appearance: none;
+  width: 120px;
+  height: 6px;
+  background: #ccc;
+  border-radius: 5px;
+  outline: none;
+}
+
+.slider-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: #555;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.slider-range::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: #555;
+  border-radius: 50%;
+  cursor: pointer;
+}
