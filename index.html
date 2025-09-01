@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cica menu</title>
+    <link href="https://fonts.googleapis.com/css2?family=Asimov&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<div class="ui">
+    <div class="header-box">
+        <div id="headerBanner" class="header-banner">
+            <img id="headerBannerImg" alt="banner">
+        </div>
+    </div>
+
+    <div class="nav-box">
+        <span id="navPath" class="nav-path">Main</span>
+        <span class="nav-current" id="navCurrent"> › Main</span>
+    </div>
+
+    <div class="content-row">
+        <div class="menu" id="menuBox">
+            <div id="mainMenu" class="menu-content">
+                <ul class="menu-list">
+                    <li data-action="show-player"><span class="left"><span class="menu-icon"><i class="fas fa-user"></i></span><span>Player</span></span><span>›</span></li>
+                    <li data-action="show-server"><span class="left"><span class="menu-icon"><i class="fas fa-server"></i></span><span>Server</span></span><span>›</span></li>
+                    <li data-action="show-weapon"><span class="left"><span class="menu-icon"><i class="fas fa-gun"></i></span><span>Weapon</span></span><span>›</span></li>
+                    <li data-action="show-vehicle"><span class="left"><span class="menu-icon"><i class="fas fa-car"></i></span><span>Vehicle</span></span><span>›</span></li>
+                    <li data-action="show-teleport"><span class="left"><span class="menu-icon"><i class="fas fa-location-dot"></i></span><span>Teleport</span></span><span>›</span></li>
+                    <li data-action="show-misc"><span class="left"><span class="menu-icon"><i class="fas fa-cubes"></i></span><span>Miscellaneous</span></span><span>›</span></li>
+                    <li data-action="show-settings"><span class="left"><span class="menu-icon"><i class="fas fa-gear"></i></span><span>Settings</span></span><span>›</span></li>
+                    <li data-action="show-developer"><span class="left"><span class="menu-icon"><i class="fas fa-code"></i></span><span>Developer</span></span><span>›</span></li>
+                </ul>
+            </div>
+
+            <div id="playerMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-godmode"><span class="left"><span>Godmode</span></span><label class="toggle-switch"><input type="checkbox" id="godmodeToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-invincible"><span class="left"><span>Invincible</span></span><label class="toggle-switch"><input type="checkbox" id="invincibleToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-noclip"><span class="left"><span>Noclip</span></span><label class="toggle-switch"><input type="checkbox" id="noclipToggle"><span class="slider"></span></label></li>
+                    <li data-action="heal"><span class="left"><span>Heal Player</span></span></li>
+                </ul>
+            </div>
+
+            <div id="serverMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-infinite-ammo"><span class="left"><span>Infinite Ammo</span></span><label class="toggle-switch"><input type="checkbox" id="ammoToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-no-ragdoll"><span class="left"><span>No Ragdoll</span></span><label class="toggle-switch"><input type="checkbox" id="ragdollToggle"><span class="slider"></span></label></li>
+                    <li data-action="kick-all"><span class="left"><span>Kick All Players</span></span></li>
+                </ul>
+            </div>
+
+            <div id="weaponMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-unlimited-clip"><span class="left"><span>Unlimited Clip</span></span><label class="toggle-switch"><input type="checkbox" id="clipToggle"><span class="slider"></span></label></li>
+                    <li data-action="give-all-weapons"><span class="left"><span>Give All Weapons</span></span></li>
+                </ul>
+            </div>
+
+            <div id="vehicleMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-godmode-vehicle"><span class="left"><span>Vehicle Godmode</span></span><label class="toggle-switch"><input type="checkbox" id="vehicleGodmodeToggle"><span class="slider"></span></label></li>
+                    <li data-action="repair-vehicle"><span class="left"><span>Repair Vehicle</span></span></li>
+                    <li data-action="spawn-vehicle"><span class="left"><span>Spawn Vehicle</span></span></li>
+                </ul>
+            </div>
+
+            <div id="teleportMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="teleport-home"><span class="left"><span>Teleport Home</span></span></li>
+                    <li data-action="teleport-job"><span class="left"><span>Teleport to Job</span></span></li>
+                </ul>
+            </div>
+
+            <div id="miscMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-nightvision"><span class="left"><span>Nightvision</span></span><label class="toggle-switch"><input type="checkbox" id="nightvisionToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-thermalvision"><span class="left"><span>Thermal Vision</span></span><label class="toggle-switch"><input type="checkbox" id="thermalvisionToggle"><span class="slider"></span></label></li>
+                </ul>
+            </div>
+
+            <div id="settingsMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="toggle-crosshair"><span class="left"><span>Crosshair</span></span><label class="toggle-switch"><input type="checkbox" id="crosshairToggle"><span class="slider"></span></label></li>
+                    <li data-action="toggle-hud"><span class="left"><span>HUD</span></span><label class="toggle-switch"><input type="checkbox" id="hudToggle"><span class="slider"></span></label></li>
+                </ul>
+            </div>
+
+            <div id="developerMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="debug-info"><span class="left"><span>Debug Info</span></span></li>
+                    <li data-action="reload-scripts"><span class="left"><span>Reload Scripts</span></span></li>
+                    <li data-action="test-connection"><span class="left"><span>Test Connection</span></span></li>
+                    <li data-action="ui-position"><span class="left"><span>UI Position</span></span><span>›</span></li>
+                </ul>
+            </div>
+
+            <div id="uiPositionMenu" class="menu-content hidden">
+                <ul class="menu-list">
+                    <li data-action="reset-ui-position"><span class="left"><span>Reset Position</span></span></li>
+                </ul>
+                
+                <div class="developer-controls">
+                    <div class="coord-input">
+                        <label>X:</label>
+                        <input type="number" id="posX" value="20">
+                    </div>
+                    <div class="coord-input">
+                        <label>Y:</label>
+                        <input type="number" id="posY" value="50">
+                    </div>
+                    
+                    <div class="swipe-container">
+                        <div class="swipe-label">
+                            <span>Left</span>
+                            <span>UI Position</span>
+                            <span>Right</span>
+                        </div>
+                        <div class="swipe-bar" id="swipeBar">
+                            <div class="swipe-handle" id="swipeHandle"></div>
+                        </div>
+                    </div>
+                    
+                    <button class="dev-button" id="applyPosition">Apply Position</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="scrollbar-container" id="externalScrollbar">
+            <div class="scrollbar-track"></div>
+            <div class="scrollbar-thumb"></div>
+        </div>
+    </div>
+
+    <div class="footer-box">
+        <span>Quanta</span>
+    </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+
