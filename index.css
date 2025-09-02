@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Asimovian:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kode+Mono:wght@400;500;600;700&display=swap');
 
 
 :root {
@@ -11,7 +11,7 @@
 
 body {
     background: transparent;
-    font-family: 'Asimovian', monospace;
+    font-family: 'Kode Mono', monospace;
     color: white;
     min-height: 100vh;
     margin: 0;
