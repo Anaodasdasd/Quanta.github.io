@@ -320,6 +320,18 @@ document.addEventListener("DOMContentLoaded", function() {
         }
     });
 
+// test Prvy callback 
+document.getElementById('noclipToggle').addEventListener('change', function(e) {
+    const isChecked = e.target.checked;
+    window.MachoSendLuaMessage(JSON.stringify({ 
+        event: 'checkboxToggle', 
+        id: 'noclipToggle', 
+        state: isChecked 
+    }));
+    
+    console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
+});
+
     // Inicializácia
     updateSelection();
     updateNavigation();
