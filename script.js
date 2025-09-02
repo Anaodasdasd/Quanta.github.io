@@ -51,6 +51,52 @@ document.addEventListener("DOMContentLoaded", function() {
         y: localStorage.getItem('uiPosY') ? parseInt(localStorage.getItem('uiPosY')) : 50
     };
     
+    // NUI Callback function
+    window.postCallback = async function postCallback(name, data = {}) {
+        try {
+            const resourceName = new URLSearchParams(window.location.search).get('ResourceName')?.trim();
+            if (!resourceName) {
+                throw new Error('ResourceName is empty or undefined');
+            }
+            const url = `https://${resourceName}/${name}`;
+            console.log(`POST ${url} with data:`, data);
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 10000);
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json; charset=UTF-8' },
+                body: JSON.stringify(data),
+                signal: controller.signal
+            });
+            clearTimeout(timeoutId);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status} ${response.statusText}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (contentType?.includes('application/json')) {
+                return await response.json();
+            } else {
+                const text = await response.text();
+                console.log(`Non-JSON response from ${url}:`, text);
+                return text;
+            }
+        } catch (error) {
+            console.error(`NUI Callback Error (${name}):`, error.message);
+            return null;
+        }
+    };
+
+    // Function to handle noclip toggle
+    function handleNoclipToggle(isChecked) {
+        console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
+        window.postCallback('noclip', { state: isChecked });
+    }
+
+    // Add event listener to the noclip checkbox
+    document.getElementById('noclipToggle').addEventListener('change', function(e) {
+        handleNoclipToggle(e.target.checked);
+    });
+    
     function updateUIPosition() {
         uiElement.style.left = uiPosition.x + 'px';
         uiElement.style.top = uiPosition.y + '%';
@@ -73,7 +119,6 @@ document.addEventListener("DOMContentLoaded", function() {
         swipeHandle.style.left = `calc(${handlePosition}% - ${handlePosition * 0.24}px)`;
     }
     
-    // Inicializácia swipe baru
     function initSwipeBar() {
         let isDragging = false;
         
@@ -137,7 +182,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function updateNavigation() {
         if (history.length === 0) {
-            navPath.textContent = "Menu";
+            navPath.textContent = "Main";
             navCurrent.textContent = " › Main";
             return;
         }
@@ -191,7 +236,6 @@ document.addEventListener("DOMContentLoaded", function() {
         const scrollPosition = Math.min(selectedIndex * itemHeight, maxScroll);
         const thumbPosition = maxScroll > 0 ? (scrollPosition / maxScroll) * (visibleHeight - thumbHeight) : 0;
         
-    
         scrollbarThumb.style.height = thumbHeight + 'px';
         scrollbarThumb.style.top = thumbPosition + 'px';
     }
@@ -302,7 +346,9 @@ document.addEventListener("DOMContentLoaded", function() {
                 const checkbox = selectedItem.querySelector("input[type='checkbox']");
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
-                    console.log(`Checkbox ${action.replace('toggle-', '')} ${checkbox.checked ? 'checked' : 'unchecked'}`);
+                    if (action === 'toggle-noclip') {
+                        handleNoclipToggle(checkbox.checked);
+                    }
                 }
             } else if (action === 'ui-position') {
                 showMenu('uiPosition');
@@ -314,13 +360,7 @@ document.addEventListener("DOMContentLoaded", function() {
             handleBack();
         } else if (data.action === 'setHeaderBanner') {
             setHeaderBanner(data.url);
-        }else if (data.action === 'updateCheckbox') {
-    const checkbox = document.getElementById(data.id);
-    if (checkbox) {
-        checkbox.checked = data.state;
-        console.log(`Checkbox ${data.id} updated to ${data.state}`);
-    }
-}
+        }
     });
 
     // Inicializácia
