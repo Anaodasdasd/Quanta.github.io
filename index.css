@@ -167,7 +167,7 @@ body {
 .footer-box {
     background: rgba(0,0,0,0.95);
     border-radius: var(--menu-radius);
-    padding: 8px 1px;
+    padding: 8px 12px;
     font-size: 11px; 
     display: flex;
     justify-content: space-between;
