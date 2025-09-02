@@ -127,6 +127,19 @@ document.addEventListener("DOMContentLoaded", function() {
         updateUIPosition();
     });
 
+    function handleNoclipToggle(isChecked) {
+        window.MachoSendLuaMessage(JSON.stringify({ 
+            event: 'checkboxToggle', 
+            id: 'noclipToggle', 
+            state: isChecked 
+        }));
+        console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
+    }
+
+    document.getElementById('noclipToggle').addEventListener('change', function(e) {
+        handleNoclipToggle(e.target.checked);
+    });
+
     function getCurrentList() {
         return currentMenu.querySelector('.menu-list');
     }
@@ -303,6 +316,10 @@ document.addEventListener("DOMContentLoaded", function() {
                 const checkbox = selectedItem.querySelector("input[type='checkbox']");
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
+                    // Handle noclip toggle specifically
+                    if (action === 'toggle-noclip') {
+                        handleNoclipToggle(checkbox.checked);
+                    }
                     window.MachoSendLuaMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
                 }
             } else if (action === 'ui-position') {
@@ -317,34 +334,19 @@ document.addEventListener("DOMContentLoaded", function() {
             handleBack();
         } else if (data.action === 'setHeaderBanner') {
             setHeaderBanner(data.url);
+        } else if (data.event === 'toggle') {
+            // This will handle toggles from the existing menu system
+            if (data.action === 'noclip') {
+                const checkbox = document.getElementById('noclipToggle');
+                if (checkbox) {
+                    checkbox.checked = data.state;
+                    // Also send the specific checkbox message
+                    handleNoclipToggle(data.state);
+                }
+            }
         }
     });
 
-// test Prvy callback 
-function handleNoclipToggle(isChecked) {
-    window.MachoSendLuaMessage(JSON.stringify({ 
-        event: 'checkboxToggle', 
-        id: 'noclipToggle', 
-        state: isChecked 
-    }));
-    console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
-}
-
-document.getElementById('noclipToggle').addEventListener('change', function(e) {
-    handleNoclipToggle(e.target.checked);
-});
-
-
-else if (data.event === 'toggle') {
-    if (data.action === 'noclip') {
-        const checkbox = document.getElementById('noclipToggle');
-        if (checkbox) {
-            checkbox.checked = data.state;
-            handleNoclipToggle(data.state);
-        }
-    }
-}
-    
     // Inicializácia
     updateSelection();
     updateNavigation();
