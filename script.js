@@ -53,15 +53,13 @@ document.addEventListener("DOMContentLoaded", function() {
     
     // Function to handle noclip toggle changes
     function handleNoclipToggle(isChecked) {
-        // Posielame správu cez window.MachoSendDuiMessage
-        if (typeof window.MachoSendDuiMessage === 'function') {
-            window.MachoSendDuiMessage(JSON.stringify({ 
-                action: 'checkboxToggle', 
-                id: 'noclipToggle', 
-                state: isChecked 
-            }));
-        }
         console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
+        // Posielame správu cez window.postMessage (jediný spôsob komunikácie JavaScript -> Lua)
+        window.postMessage({
+            action: 'checkboxToggle',
+            id: 'noclipToggle',
+            state: isChecked
+        }, '*');
     }
 
     // Add event listener to the noclip checkbox
@@ -274,7 +272,6 @@ document.addEventListener("DOMContentLoaded", function() {
         if (isAnimating || history.length === 0) return;
         isAnimating = true;
         
-        // Pridaj animáciu pre odchod
         currentMenu.classList.add('animate-out');
         
         setTimeout(() => {
@@ -321,12 +318,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 const checkbox = selectedItem.querySelector("input[type='checkbox']");
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
-                    // Handle noclip toggle specifically
                     if (action === 'toggle-noclip') {
                         handleNoclipToggle(checkbox.checked);
-                    }
-                    if (typeof window.MachoSendDuiMessage === 'function') {
-                        window.MachoSendDuiMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
                     }
                 }
             } else if (action === 'ui-position') {
@@ -334,10 +327,6 @@ document.addEventListener("DOMContentLoaded", function() {
             } else if (action === 'reset-ui-position') {
                 uiPosition = { x: 20, y: 50 };
                 updateUIPosition();
-            } else {
-                if (typeof window.MachoSendDuiMessage === 'function') {
-                    window.MachoSendDuiMessage(JSON.stringify({ event: 'menuAction', action: action }));
-                }
             }
         } else if (data.action === 'back') {
             handleBack();
