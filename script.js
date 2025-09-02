@@ -51,22 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
         y: localStorage.getItem('uiPosY') ? parseInt(localStorage.getItem('uiPosY')) : 50
     };
     
-    // Function to handle noclip toggle changes
-    function handleNoclipToggle(isChecked) {
-        console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
-        // Posielame správu cez window.postMessage (jediný spôsob komunikácie JavaScript -> Lua)
-        window.postMessage({
-            action: 'checkboxToggle',
-            id: 'noclipToggle',
-            state: isChecked
-        }, '*');
-    }
-
-    // Add event listener to the noclip checkbox
-    document.getElementById('noclipToggle').addEventListener('change', function(e) {
-        handleNoclipToggle(e.target.checked);
-    });
-    
     function updateUIPosition() {
         uiElement.style.left = uiPosition.x + 'px';
         uiElement.style.top = uiPosition.y + '%';
@@ -318,9 +302,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 const checkbox = selectedItem.querySelector("input[type='checkbox']");
                 if (checkbox) {
                     checkbox.checked = !checkbox.checked;
-                    if (action === 'toggle-noclip') {
-                        handleNoclipToggle(checkbox.checked);
-                    }
+                    console.log(`Checkbox ${action.replace('toggle-', '')} ${checkbox.checked ? 'checked' : 'unchecked'}`);
                 }
             } else if (action === 'ui-position') {
                 showMenu('uiPosition');
@@ -332,6 +314,13 @@ document.addEventListener("DOMContentLoaded", function() {
             handleBack();
         } else if (data.action === 'setHeaderBanner') {
             setHeaderBanner(data.url);
+        } else if (data.action === 'updateCheckbox') {
+            // Lua môže poslať správu na aktualizáciu checkboxu
+            const checkbox = document.getElementById(data.id);
+            if (checkbox) {
+                checkbox.checked = data.state;
+                console.log(`Checkbox ${data.id} updated to ${data.state}`);
+            }
         }
     });
 
