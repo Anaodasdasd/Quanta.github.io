@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function updateNavigation() {
         if (history.length === 0) {
-            navPath.textContent = "Main";
+            navPath.textContent = "Menu";
             navCurrent.textContent = " › Main";
             return;
         }
