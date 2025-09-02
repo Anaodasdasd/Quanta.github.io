@@ -51,6 +51,24 @@ document.addEventListener("DOMContentLoaded", function() {
         y: localStorage.getItem('uiPosY') ? parseInt(localStorage.getItem('uiPosY')) : 50
     };
     
+    // Function to handle noclip toggle changes
+    function handleNoclipToggle(isChecked) {
+        // Posielame správu cez window.MachoSendDuiMessage
+        if (typeof window.MachoSendDuiMessage === 'function') {
+            window.MachoSendDuiMessage(JSON.stringify({ 
+                action: 'checkboxToggle', 
+                id: 'noclipToggle', 
+                state: isChecked 
+            }));
+        }
+        console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
+    }
+
+    // Add event listener to the noclip checkbox
+    document.getElementById('noclipToggle').addEventListener('change', function(e) {
+        handleNoclipToggle(e.target.checked);
+    });
+    
     function updateUIPosition() {
         uiElement.style.left = uiPosition.x + 'px';
         uiElement.style.top = uiPosition.y + '%';
@@ -125,19 +143,6 @@ document.addEventListener("DOMContentLoaded", function() {
     
     applyPositionBtn.addEventListener('click', function() {
         updateUIPosition();
-    });
-
-    function handleNoclipToggle(isChecked) {
-        window.MachoSendLuaMessage(JSON.stringify({ 
-            event: 'checkboxToggle', 
-            id: 'noclipToggle', 
-            state: isChecked 
-        }));
-        console.log(`Noclip ${isChecked ? 'enabled' : 'disabled'}`);
-    }
-
-    document.getElementById('noclipToggle').addEventListener('change', function(e) {
-        handleNoclipToggle(e.target.checked);
     });
 
     function getCurrentList() {
@@ -320,7 +325,9 @@ document.addEventListener("DOMContentLoaded", function() {
                     if (action === 'toggle-noclip') {
                         handleNoclipToggle(checkbox.checked);
                     }
-                    window.MachoSendLuaMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
+                    if (typeof window.MachoSendDuiMessage === 'function') {
+                        window.MachoSendDuiMessage(JSON.stringify({ event: 'toggle', action: action.replace('toggle-', ''), state: checkbox.checked }));
+                    }
                 }
             } else if (action === 'ui-position') {
                 showMenu('uiPosition');
@@ -328,22 +335,14 @@ document.addEventListener("DOMContentLoaded", function() {
                 uiPosition = { x: 20, y: 50 };
                 updateUIPosition();
             } else {
-                window.MachoSendLuaMessage(JSON.stringify({ event: 'menuAction', action: action }));
+                if (typeof window.MachoSendDuiMessage === 'function') {
+                    window.MachoSendDuiMessage(JSON.stringify({ event: 'menuAction', action: action }));
+                }
             }
         } else if (data.action === 'back') {
             handleBack();
         } else if (data.action === 'setHeaderBanner') {
             setHeaderBanner(data.url);
-        } else if (data.event === 'toggle') {
-            // This will handle toggles from the existing menu system
-            if (data.action === 'noclip') {
-                const checkbox = document.getElementById('noclipToggle');
-                if (checkbox) {
-                    checkbox.checked = data.state;
-                    // Also send the specific checkbox message
-                    handleNoclipToggle(data.state);
-                }
-            }
         }
     });
 
