@@ -314,14 +314,13 @@ document.addEventListener("DOMContentLoaded", function() {
             handleBack();
         } else if (data.action === 'setHeaderBanner') {
             setHeaderBanner(data.url);
-        } else if (data.action === 'updateCheckbox') {
-            // Lua môže poslať správu na aktualizáciu checkboxu
-            const checkbox = document.getElementById(data.id);
-            if (checkbox) {
-                checkbox.checked = data.state;
-                console.log(`Checkbox ${data.id} updated to ${data.state}`);
-            }
-        }
+        }else if (data.action === 'updateCheckbox') {
+    const checkbox = document.getElementById(data.id);
+    if (checkbox) {
+        checkbox.checked = data.state;
+        console.log(`Checkbox ${data.id} updated to ${data.state}`);
+    }
+}
     });
 
     // Inicializácia
